@@ -1,0 +1,148 @@
+<%-include("../partials/adminheader.ejs")  %>
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Products List</h2>
+                    <p>Add,Edit or Delete a product</p>
+                </div>
+                <div>
+                    <a href="/addProduct" class="btn btn-primary"><i class="text-muted material-icons md-post_add"></i>Add Product</a>
+                </div>
+             
+            </div>
+            <div class="card mb-4">
+                <header class="card-header">
+                   
+                </header> <!-- card-header end// -->
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Sl No.</th>
+                                    <th>Image</th>
+                                    <th>Product Name</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Stock</th>
+                                    <th>Status</th>
+                                    <th> </th>
+                                    <th>List/Unlist</th>
+                                    <td class="text-end">Edit</td>
+                                </tr>
+                            </thead>
+                                <tbody>
+                                    <% products.forEach((row,index)=>{ %>
+                                        <tr>
+                                            <td><%= index +1 %></td>
+                                            <td class="align-middle">
+                                                <img
+                                                src="/product_images/<%= row.image[1] %>"
+                                                alt="Product Image"
+                                                class="img-thumbnail"
+                                                style="width:50px;height:50px"
+                                                />
+                                            </td>
+                                            <td><%= row.productName %></td>
+                                            <td><%= row.category.name %></td>
+                                            <td><%= row.price %></td>
+                                            <td><%= row.stock %></td>
+                                            <td>
+                                                <% if (row.ispublished==true) { %>
+                                                    <span class="badge rounded-pill alert-success">Listed</span>
+                                                <% } else { %>
+                                                    <span class="badge rounded-pill alert-danger">Unlisted</span>
+                                                <% } %>
+                                            </td>
+                                            <td class="text-end">
+                                            <td >
+                                                <% if (row.ispublished === false) { %>
+                                                    <a href="/publishProduct/<%= row._id %>" class="btn btn-md rounded font-sm">Publish</a>
+                                                       
+                                                  
+                                                <% } else { %>
+                                                    <a href="/unpublishProduct/<%= row._id %>" class="btn btn-danger rounded font-sm">Hide</a>
+                                                      
+                                                   
+                                                <% } %>
+                                            </td>
+                                            <td class="text-end">
+                                                <a href="/updateProduct?id=<%= row._id %>" class="btn btn-md rounded font-sm">Edit</a>
+                                            </td>
+                                        </tr>
+
+                                   <%  })%> 
+                                </tbody>
+
+        
+                            </div> <!-- table-responsive//end -->
+                        </div>
+                        <!-- card-body end// -->
+                    </div>
+
+        <!-- Pagination Section Begin -->
+        <div class="pagination-area mt-15 mb-50">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <% if (currentPage > 1) { %>
+                        <li class="page-item">
+                            <a class="page-link pagination-link" href="?page=<%= prevPage %>" data-page="<%= prevPage %>">
+                                <i class="material-icons md-chevron_left"></i>
+                            </a>
+                        </li>
+                    <% } %>
+                    <% if (currentPage > 2) { %>
+                        <li class="page-item">
+                            <a class="page-link pagination-link" href="?page=1" data-page="1">1</a>
+                        </li>
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    <% } %>
+                    <% if (currentPage > 1) { %>
+                        <li class="page-item">
+                            <a class="page-link pagination-link" href="?page=<%= currentPage - 1 %>" data-page="<%= currentPage - 1 %>"><%= currentPage - 1 %></a>
+                        </li>
+                    <% } %>
+                    <li class="page-item active">
+                        <span class="page-link"><%= currentPage %></span>
+                    </li>
+                    <% if (hasNextPage) { %>
+                        <li class="page-item">
+                            <a class="page-link pagination-link" href="?page=<%= currentPage + 1 %>" data-page="<%= currentPage + 1 %>"><%= currentPage + 1 %></a>
+                        </li>
+                    <% } %>
+                    <% if (nextPage !== lastPage && currentPage !== lastPage) { %>
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                        <li class="page-item">
+                            <a class="page-link pagination-link" href="?page=<%= lastPage %>" data-page="<%= lastPage %>"><%= lastPage %></a>
+                        </li>
+                    <% } %>
+                    <% if (currentPage !== lastPage) { %>
+                        <li class="page-item">
+                            <a class="page-link pagination-link" href="?page=<%= nextPage %>" data-page="<%= nextPage %>">
+                                <i class="material-icons md-chevron_right"></i>
+                            </a>
+                        </li>
+                    <% } %>
+                </ul>
+            </nav>
+        </div>
+        <!-- Pagination Section End -->
+
+        </section> <!-- content-main end// -->
+       <%-include("../partials/adminfooter.ejs")  %>
+       <script>
+        function confirmList(Id){
+            if(confirm("Are you sure to list this ")){
+                window.location.href="/list"+Id;
+            }
+        }
+        function confirmUnlist(Id){
+            if(confirm("Are you sure to unlist this")){
+                window.location.href="/unlist"+Id;
+            }
+        }
+       </script>
+       
+       
+       
+      

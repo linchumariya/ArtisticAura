@@ -1,0 +1,120 @@
+<%- include ('../partials/userheader') %>
+<div class="page-header breadcrumb-wrap">
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/cart" rel="nofollow">Wishlist</a>
+        </div>
+    </div>
+</div>
+<section class="mt-50 mb-50">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <% if (wishlist && wishlist.items.length > 0) { %>
+                    <div class="table-responsive">
+                        <table class="table shopping-summery text-center">
+                            <thead>
+                                <tr class="main-heading">
+                                    <th scope="col" colspan="2">Product</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Stock Status</th>
+                                    <th scope="col">Action</th>
+                                    <th scope="col">Remove</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% wishlist.items.forEach((row) => { %>
+                                    <tr>
+                                        <% if (row.product && row.product.image) { %>
+                                        <td class="image product-thumbnail"><img src="/product_images/<%= row.product.image[0] %>" alt="#"></td>
+                                        <% } else { %>
+                                            <td class="image product-thumbnail">No Image Available</td>
+                                            <% } %>
+                                        <td class="product-des product-name">
+                                            <h5 class="product-name"><a href="/product/<%= row.product._id %>"><%= row.product.productName %></a></h5>
+                                        </td>
+                                        <td class="price" data-title="Price"><span>₹ <%= row.price %></span></td>
+                                        <% if (row.product.stock > 0) { %>
+                                            <td class="text-center" data-title="Stock">
+                                                <span class="color3 font-weight-bold">In Stock</span>
+                                            </td>
+                                        <% } else { %>
+                                            <td class="text-center" data-title="Stock">
+                                                <span class="color3 font-weight-bold">Out of Stock</span>
+                                            </td>
+                                        <% } %>
+                                        <td class="text-right" data-title="Cart">
+                                            <% if (row.product.stock > 0) { %>
+                                                <button class="btn btn-sm" onclick="addToCart('<%= row.product._id %>')"><i class="fi-rs-shopping-bag mr-5"></i>Add to cart</button>
+                                            <% } else { %>
+                                                <span style="color: red;"> N/A</span>
+                                            <% } %>
+                                        </td>
+                                        <td class="action">
+                                            <form>
+                                                <a type="button" class="text-muted" data-id="<%= row.product._id %>" onclick="remove('<%= row.product._id %>')"><i class="fi-rs-trash"></i></a>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } else { %>
+                    <p>No items found in your wishlist.</p>
+                <% } %>
+            </div>                
+        </div>            
+    </div>
+</section>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Function to add an item to the cart
+    function addToCart(productId) {
+        $.ajax({
+            url: `/addtocart/${productId}`,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ productId: productId }),
+            success: function(data) {
+                if (data.success) {
+                    alert("Product added to cart successfully.");
+                    // Optionally, update the UI to reflect the addition
+                } else {
+                    alert(data.message||"Failed to add product to cart.");
+                }
+            },
+            error: function(xhr, status, error) {
+                
+                console.error('Error:', error);
+                alert("An error occurred while adding the product to the cart.");
+            }
+        });
+    }
+
+    // Function to remove an item from the wishlist
+    function remove(productId) {
+        if (confirm("Are you sure you want to remove this item from your wishlist?")) {
+            $.ajax({
+                url: `/removewishlist/${productId}`,
+                type: 'GET',
+                contentType: 'application/json',
+                success: function(data) {
+                    if (data.success) {
+                        alert("Product removed from wishlist successfully.");
+                        // Optionally, remove the item from the UI
+                        location.reload(); // Reload the page to reflect changes
+                    } else {
+                        alert("Failed to remove product from wishlist.");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    alert("An error occurred while removing the product from the wishlist.");
+                }
+            });
+        }
+    }
+</script>
+
+<%- include ('../partials/userfooter') %>

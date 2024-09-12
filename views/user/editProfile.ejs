@@ -1,0 +1,110 @@
+<%- include ('../partials/userheader') %>
+<main>
+<section class="pt-150 pb-150">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 m-auto">
+                <div class="row">
+                        <div class="tab-content dashboard-content">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Profile Details And Edit Profile</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form action="/editedprofile" method="post" onsubmit="return validateForm()" name="registrationForm">
+                                        <div class="mb-3">
+                                            <label class="form-label">Enter your name</label>
+                                            <input class="form-control" placeholder="Your name" type="text" value="<%= users.name %>" name="name" >
+                                            <span id="name-error" style="font-size: 14px; margin-top: -20px; color: red;"></span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Email</label>
+                                            <input class="form-control" placeholder="Your email" value="<%= users.email %>" type="email" name="email" >
+                                            <span id="email-error" style="font-size: 14px; margin-top: -20px; color: red;"></span>
+                                        </div> 
+                                        <div class="mb-3">
+                                            <label class="form-label">Phone</label>
+                                            <div class="row gx-2">
+                                                <input class="form-control" placeholder="Enter your number" value="<%= users.phone %>" type="text" name="phone" >
+                                                <span id="phone-error" style="font-size: 14px; margin-top: -20px; color: red;"></span>
+                                            </div>
+                                        </div>
+                                        <div class="mb-4">
+                                            <button type="submit" class="btn btn-primary w-100"> Save </button>
+                                        </div> 
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- Reset Password--------------------------------------------- -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 m-auto">
+                <div class="row">
+                    <div class="tab-content dashboard-content">
+                        <div class="card-body">
+                            <h4 class="card-title mb-4">Reset Password</h4>
+                           
+                                <form id="resetPasswordForm" action="/changepassword" method="post" onsubmit="return validatePassword()">
+                                    <div class="mb-3">
+                                        <input class="form-control" placeholder="Current Password" type="password" name="currentpassword">
+                                    </div>
+                                    <div class="mb-3">
+                                        <input id="newPasswordInput" class="form-control" placeholder="New Password" type="password" name="newpassword">
+                                    </div>
+                                    <div class="mb-3">
+                                        <input id="confirmPasswordInput" class="form-control" placeholder="Confirm Password" type="password" name="confirmpassword">
+                                        <span id="passwordMessage"></span>
+                                    </div>
+                                    <div class="mb-4">
+                                        <button type="submit" class="btn btn-primary w-100">Reset Password</button>
+                                    </div>
+                                </form>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</main>
+<script>
+    function validatePassword() {
+        const newPassword = document.getElementById('newPasswordInput').value;
+        const confirmPassword = document.getElementById('confirmPasswordInput').value;
+
+        if (newPassword !== confirmPassword) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'New Password and Confirm Password do not match!',
+            });
+            return false;
+        }
+
+        // Additional validation logic (e.g., password strength) can go here
+
+        return true;
+    }
+
+    // Optional: Show a success alert after form submission
+    document.getElementById('resetPasswordForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form submission to demonstrate the alert
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Password Reset',
+            text: 'Your password has been successfully reset!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                this.submit(); // Submit the form if the user confirms
+            }
+        });
+    });
+</script>
+
+<%- include ('../partials/userfooter') %>

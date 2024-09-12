@@ -1,0 +1,281 @@
+<%- include ('../partials/userheader') %>
+<head>
+    <style>
+        .old-price {
+            color: #cccccc;
+            font-size: 30px;
+            font-weight: 400;
+            text-decoration: line-through;
+        }
+        </style>
+</head>
+<body>
+<main class="main">
+    <div class="page-header breadcrumb-wrap">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="/" rel="nofollow">Home</a>
+                <span></span><%= data.productName %>
+            </div>
+        </div>
+    </div>
+    <section class="mt-50 mb-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="product-detail accordion-detail">
+                        <div class="row mb-50">
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <div class="detail-gallery">
+                                    <span class="zoom-icon"><i class="fi-rs-search"></i></span>
+                                    <!-- MAIN SLIDES -->
+                                    <div class="product-image-slider">
+                                        <figure class="border-radius-10">
+                                            <img src="/product_images/<%= data.image[0] %>" alt="<%= data.productName %>">
+                                        </figure>
+                                        <figure class="border-radius-10">
+                                            <img src="/product_images/<%= data.image[1] %>" alt="<%= data.productName %>">
+                                        </figure>
+                                        <figure class="border-radius-10">
+                                            <img src="/product_images/<%= data.image[2] %>" alt="<%= data.productName %>">
+                                        </figure>
+                                    </div>
+                                    <!-- THUMBNAILS -->
+                                    <div class="slider-nav-thumbnails pl-15 pr-15">
+                                        <div><img src="/product_images/<%= data.image[0] %>" alt="<%= data.productName %>"></div>
+                                        <div><img src="/product_images/<%= data.image[1] %>" alt="<%= data.productName %>"></div>
+                                        <div><img src="/product_images/<%= data.image[2] %>" alt="<%= data.productName %>"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <div class="detail-info">
+                                    <h2 class="title-detail"><%= data.productName %></h2>
+                                    <div class="product-detail-rating">
+                                        <div class="pro-details-brand">
+                                            <span> Category: <a><%= data.category.name %></a></span>
+                                        </div>
+                                        <div class="product-rate-cover text-end">
+                                            <div class="product-rate d-inline-block">
+                                                <div class="product-rating" style="width:90%"></div>
+                                            </div>
+                                            <span class="font-small ml-5 text-muted"> (25 reviews)</span>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix product-price-cover">
+                                        <div class="product-price primary-color float-left">
+                                            <ins><span class="text-brand"> ₹<%= data.price %></span></ins>
+                                            <span class="save-price font-md color3 ml-15"><%= data.discount %>% off</span>
+                                            <br><span class="old-price">₹<%= data.oldPrice %></span><br>
+                                        </div>
+                                    </div>
+                                    <div class="bt-1 border-color-1 mt-15 mb-15"></div>
+                                    <div class="short-desc mb-30">
+                                        <p><%= data.description %></p>
+                                    </div>
+                                    <div class="product_sort_info font-xs mb-30">
+                                        <ul>
+                                            <li class="mb-10"><i class="fi-rs-crown mr-5"></i> 1 Year AL Jazeera Brand Warranty</li>
+                                            <li class="mb-10"><i class="fi-rs-refresh mr-5"></i> 30 Day Return Policy</li>
+                                            <li><i class="fi-rs-credit-card mr-5"></i> Cash on Delivery available</li>
+                                        </ul>
+                                    </div>
+                                    <div class="bt-1 border-color-1 mt-30 mb-30"></div>
+                                    <div class="detail-extralink">
+                                        <div class="product-extra-link2">
+                                            
+                                            <!-- <button type="button" class="button button-add-to-cart"  onclick="addToCart('<%= data._id %>')" >Add to cart</button> -->
+                                            <button type="button" 
+                                            class="button button-add-to-cart" 
+                                            <% if (data.stock === 0) { %> 
+                                                disabled 
+                                                style="cursor: not-allowed; background-color: #ccc;" 
+                                                title="This item is out of stock" 
+                                            <% } %>
+                                            onclick="<%= data.stock > 0 ? `addToCart('${data._id}', '${user ? user._id : ''}')` : '' %>"
+
+                                        >
+                                            Add to Cart
+                                        </button>
+                                            <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addToWishlist('<%= data._id %>','<%= user ? user._id : null %>')"><i class="fi-rs-heart"></i></a>
+                                        </div>
+                                    </div>
+                                    <ul class="product-meta font-xs color-grey mt-50">
+                                        <li class="mb-5">Tags: <a href="#" rel="tag">Painting</a>, <a href="#" rel="tag">Scenery</a></li>
+                                        <li>Availability:<span class="<%= data.stock === 0 ? 'out-of-stock text-danger' : 'in-stock text-success' %> ml-5">
+                                            <%= data.stock === 0 ? 'Out of Stock' : data.stock + ' Items In Stock' %>
+                                        </span></li>
+                                    </ul>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-10 m-auto entry-main-content">
+                    <h2 class="section-title style-1 mb-30">Description</h2>
+                    <div class="description mb-50">
+                        <p><%= data.description %></p>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-60">
+                <div class="col-12">
+                    <h3 class="section-title style-1 mb-30">Related products</h3>
+                </div>
+                <div class="col-3">
+                    <div class="related-products-slider">
+                        <% doc.forEach((rel, index) => { %>
+                        <div class="product-cart-wrap small hover-up">
+                            <div class="product-img-action-wrap">
+                                <div class="product-img">
+                                    <a href="<%= rel._id %>" >
+                                        <img class="default-img" src="/product_images/<%= rel.image[0] %>" alt="">
+                                        <img class="hover-img" src="/product_images/<%= rel.image[1] %>" alt="">
+                                    </a>
+                                </div>
+                                <div class="product-action-1">
+                                    <a aria-label="Quick view" class="action-btn small hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="fi-rs-search"></i></a>
+                                    <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addToWishlist('<%= rel._id %>')"><i class="fi-rs-heart"></i></a>
+                                </div>
+                            </div>
+                            <div class="product-content-wrap">
+                                <h2><a href="" tabindex="0"><%= rel.productName %></a></h2>
+                                <div class="rating-result" title="90%">
+                                    <span></span>
+                                </div>
+                                <div class="product-price">
+                                    <span class="old-price">₹<%= rel.oldPrice %></span><br>
+                                    <span class="discounted-price">₹<%= rel.price %></span>
+                                    <span class="save-price font-md color3 ml-15"><%= rel.discount %>% off</span>
+                                </div>
+                            </div>
+                        </div>
+                        <% }); %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+<script>
+    
+    function addToCart(productId,user) {
+       
+        console.log(productId)
+        console.log(user)
+      if (user) { 
+        console.log("user",user )
+         fetch(`/addtocart/${productId}`, {
+             method: 'POST',
+             headers: {
+                 'Content-Type': 'application/json'
+             },
+         })
+         .then(response => {
+             if (!response.ok) {
+                 throw new Error('Network response was not ok');
+             }
+             return response.json();
+         })
+         .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    title: 'Added to Cart',
+                    text: 'The product has been added to your cart.',
+                    icon: 'success',
+                    confirmButtonColor: '#28a745'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/cart';
+                    }
+                });
+
+             } else {
+                
+                Swal.fire({
+                    title: 'Failed to Add',
+                    text: data.message || 'Failed to add product to cart.',
+                    icon: 'error',
+                    confirmButtonColor: '#dc3545'
+                });
+            }
+         })
+         .catch(error => {
+             console.error('Error:', error);
+             Swal.fire({
+                title: 'Error',
+                text: 'There was an error adding the product to your cart.',
+                icon: 'error',
+                confirmButtonColor: '#dc3545'
+         });
+        });
+      }else { 
+        // 
+        console.log("error: login required");
+        Swal.fire({
+            title: 'Please Log In',
+            text: 'Please log in to add items to the cart.',
+            icon: 'warning',
+            confirmButtonColor: '#ffc107'
+        }).then(() => {
+            window.location.href = '/login';
+        });
+      } 
+ }
+ 
+async function addToWishlist(productId,user) {
+    if (user) {
+    try {
+        const response = await axios.post(`/addToWishlist/${productId}`);
+      
+        if (response.data.success) {
+            Swal.fire({
+                title: 'Added to Wishlist',
+                text: response.data.message,
+                icon: 'success',
+                confirmButtonColor: '#28a745'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/wishlist';
+                }
+            });
+        }}
+            catch (error) {
+        console.error(error);
+         if (error.response && error.response.status === 409) {
+            Swal.fire({
+                title: 'Already in Wishlist',
+                text: 'The product is already in your wishlist.',
+                icon: 'warning',
+                confirmButtonColor: '#ffc107'
+            });
+        } else {
+
+            Swal.fire({
+                title: 'Error Adding Product to Wishlist',
+                text: 'There was an error adding the product to your wishlist.',
+                icon: 'error',
+                confirmButtonColor: '#dc3545'
+            });
+        }
+    }}
+    else  {
+            Swal.fire({
+                title: 'Please Log In',
+                text: 'Please log in to add items to your wishlist.',
+                icon: 'warning',
+                confirmButtonColor: '#ffc107'
+            }).then(() => {
+                window.location.href = '/login'; 
+            });
+
+         }
+}
+
+ </script>
+ 
+<%- include ('../partials/userfooter.ejs') %>

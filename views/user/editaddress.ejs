@@ -1,0 +1,66 @@
+<%- include ('../partials/userheader') %>
+
+<main class="main">
+    <div class="page-header breadcrumb-wrap">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="/" rel="nofollow">My Profile</a>
+                <span></span> My Address
+                <span></span> Edit Address
+            </div>
+        </div>
+    </div>
+    <section class="pt-150 pb-150">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 m-auto">
+                    <div class="row">
+                            <div class="tab-content dashboard-content">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Edit Address </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form method="post" name="address-form" action="/editedaddress/<%= address._id %>" onsubmit="return validateForm()">
+                                            <div class="row">
+                                                <span id="validation-error" style="font-size: 14px; margin-top: -20px; color: blue;"></span>
+                                                <div class="form-group col-md-12">
+                                                    <label>Building Name <span class="required">*</span></label>
+                                                    <input required="" class="form-control square" name="buildingname" id="buildingname" type="text" value="<%= address.buildingname %>">
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label>Pincode <span class="required">*</span></label>
+                                                    <input required="" class="form-control square" name="pincode" value="<%= address.pincode%>" id="pincode" type="text">
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label>Street <span class="required">*</span></label>
+                                                    <input required="" class="form-control square" name="street" value="<%= address.street%>" id="city" type="text">
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label>City <span class="required">*</span></label>
+                                                    <input required="" class="form-control square" value="<%= address.city%>" name="city" id="city">
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label>State <span class="required">*</span></label>
+                                                    <input required="" class="form-control square" value="<%= address.state %>" name="state" id="state">
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <label>Country <span class="required">*</span></label>
+                                                    <input required="" class="form-control square" name="country" value="<%= address.country%>" id="country" type="text">
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <button type="submit" class="btn btn-fill-out submit" name="submit" value="Submit">Save</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<%- include ('../partials/userfooter') %>

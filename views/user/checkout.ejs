@@ -1,0 +1,75 @@
+<%- include('../partials/userheader') %>
+
+<body id="checkout-page">
+    <div class="container mt-50 mb-50">
+        <div class="row">
+            <div class="col-md-8">
+                <h3>Select Shipping Address</h3>
+                <form action="/checkedout" method="POST">
+                    <div class="form-group">
+                        <select name="addressId" class="form-control" required>
+                            <% if (userAddresses.length > 0) { %>
+                                <% userAddresses.forEach((address) => { %>
+                                    <option value="<%= address._id %>">
+                                        <%= address.buildingname %>, <%= address.street %>, <%= address.city %>, <%= address.state %>, <%= address.country %> - <%= address.pincode %>
+                                    </option>
+                                <% }) %>
+                            <% } else { %>
+                                <option disabled>No addresses found. Please add an address.</option>
+                            <% } %>
+                        </select>
+                    </div>
+
+                    <h3>Order Summary</h3>
+                    <div class="table-responsive">
+                        <table class="table shopping-summery text-center clean">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% userCart.items.forEach(item => { %>
+                                    <tr>
+                                        <td><%= item.product.productName %></td>
+                                        <td>₹ <%= item.price %></td>
+                                        <td><%= item.quantity %></td>
+                                        <td>₹ <%= (item.price * item.quantity).toFixed(2) %></td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3" class="text-right"><strong>Total</strong></td>
+                                    <td><strong>₹ <%= userCart.totalPrice %></strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <h3>Payment Method</h3>
+                    <div class="form-group">
+                        <select name="paymentMethod" class="form-control" required>
+                            <option value="COD">Cash on Delivery</option>
+                            <option value="Card">Credit/Debit Card</option>
+                            <!-- Add more payment methods as needed -->
+                        </select>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg btn-block">Place Order</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- <div class="col-md-4">
+                <!-- Optionally, include a summary of the selected address, or other checkout details -->
+            </div> 
+        </div>
+    </div>
+</body>
+
+<%- include('../partials/userfooter') %>

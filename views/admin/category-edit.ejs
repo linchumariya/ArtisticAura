@@ -1,0 +1,123 @@
+<%-include("../partials/adminheader.ejs") %>
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Categories </h2>
+                    <p>Add, edit or delete a category</p>
+                </div>
+                <div>
+                    <input type="text" placeholder="Search Categories" class="form-control bg-white">
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                           
+                                <form id="form"  >
+                                <input type="hidden" name="categoryId" value="<%= data._id %>">
+
+                              <div class="mb-4">
+                                    <label for="category_name" class="form-label">Name</label>
+                                    <input type="text" name="categoryName" value="<%= data.name %>" class="form-control" id="categoryX" />
+                                    <div id="categoryName-error" class="text-danger"></div>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Description</label>
+                                    <textarea name="description" id="descriptionX" class="form-control"><%= data.description %></textarea>
+                                    <div id="description-error" class="text-danger"></div>
+                                </div>
+                                <div class="d-grid">
+                                    <% if(message !==undefined) {%>
+                                    <p><%-message %></p>
+                                    <% } %>
+                                    <button type="submit" class="btn btn-primary">Update Category</button>
+                                </div>
+                            </form>
+                    </div>
+                </main>
+
+    <script src="adminassets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="adminassets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="adminassets/js/vendors/select2.min.js"></script>
+    <script src="adminassets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="adminassets/js/vendors/jquery.fullscreen.min.js"></script>
+    <script>
+
+
+setTimeout(() => {
+            const insertmessage = document.getElementById("insertmessage");
+            insertmessage.style.display = "none";
+        }, 5000)
+
+
+    function validateForm() {
+    const categoryName = document.getElementById('categoryX').value.trim();
+    const description = document.getElementById('descriptionX').value.trim();
+    const alphabetRegex =  /^[a-zA-Z.\s]+$/;
+
+    if (!categoryName) {
+        document.getElementById('categoryName-error').innerText = 'Name is required';
+        return false;
+    } else if (!alphabetRegex.test(categoryName)) {
+        document.getElementById('categoryName-error').innerText = "Category Name should contain only alphabets";
+        return false;
+    } 
+    
+    else {
+        document.getElementById('categoryName-error').innerText = '';
+    }
+
+    if (!description) {
+        document.getElementById('description-error').innerText = 'Description is required';
+        return false;
+    } else {
+        document.getElementById('description-error').innerText = '';
+    }
+
+    return true;
+}
+    
+
+let form = document.getElementById("form")
+form.addEventListener('submit',(e)=>{
+    e.preventDefault();
+    handleSubmit()
+})
+function handleSubmit() {
+    const url = new URL(window.location.href);
+
+    const searchParams = new URLSearchParams(url.search);
+
+    const id = searchParams.get('id');
+    if (validateForm()) {
+        const categoryName = document.getElementById("categoryX").value.trim()
+        const description = document.getElementById("descriptionX").value.trim()
+         const endpoint = id ? `/updatecategory/${id}` : '/addCategory'
+        fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify( {
+                categoryName,description
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success){
+                alert(data.message)
+                window.location.href = data.redirect;
+            }else{
+                alert(data.message)
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+         
+        });
+    }
+}
+
+    </script>

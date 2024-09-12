@@ -1,0 +1,355 @@
+<%- include ('../partials/userheader') %>
+<body id="product-list">
+    
+  
+    <div class="page-header breadcrumb-wrap">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="/cart" rel="nofollow">Your Cart</a>
+            </div>
+        </div>
+    </div>
+
+    <section class="mt-50 mb-50">
+               
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="table-responsive">
+                            <table class="table shopping-summery text-center clean">
+                                <thead>
+                                    <tr class="main-heading">
+                                        <th scope="col">Image</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">Subtotal</th>
+                                        <th scope="col">Remove</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% userCart.items.forEach(item => { %>
+                                        <tr>
+                                            <td class="align-middle">
+                                                <img src="/product_images/<%= item.product.image[0] %>" alt="Product Image" class="img-thumbnail" style="width: 70px; height: 70px"/>
+                                            </td>
+                                            <td class="product-des">
+                                                <h5 class="product-name"><a href="/product/<%= item.product._id %>"><%= item.product.productName %></a></h5>
+                                            </td>
+                                            <td class="price" data-title="Price"><span>Rs. <%= item.price %></span></td>
+
+                                            <td class="text-center" data-title="Quantity">
+
+
+
+                                                <select class="form-select quantity-select" data-id="<%= item.product._id %>">
+
+
+
+                                                    <% const maxQuantity = item.product.stock >= 5 ? 5 : item.product.stock %>
+
+                                                    <% for(let i = 1; i <= maxQuantity; i++) { %>
+
+                                                        <option value="<%= i %>" <% if(item.quantity === i) { %>selected<% } %>><%= i %></option>
+
+                                                    <% } %>
+                                                </select>
+
+                                            </td>
+                                            <td class="text-right subtotal" data-id="<%= item.product._id %>">
+
+                                                <span class="subtotal-value"><%= (item.price * item.quantity).toFixed(2)  %></span>
+                                            </td>
+                                            <td class="action">
+                                                <a href="/cart/remove/<%= item.product._id %>" class="text-muted"><i class="fi-rs-trash"></i></a>
+                                            </td>
+
+                                                
+                                        </tr>
+                                    <% }) %>
+                                </tbody>
+                                            <tr>
+                                                <td class="cart_total_label">Shipping</td>
+                                                <td class="cart_total_amount"> <i class="ti-gift mr-5"></i> Free shipping </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="cart_total_label">Total</td>
+
+                                                <td class="cart_total"><strong><span class="font-xl fw-900 text-brand " id="totalPrice" >₹ <%= userCart.totalPrice %> </span></strong></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div>
+                                    <a href="/checkout" class="btn" >
+                                        <i class="fi-rs-box-alt mr-10"></i> Proceed To CheckOut
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+            <!-- <span style="color: grey;">Please add Items to your cart. </span> -->
+            
+    </section>
+    <footer class="main">
+        <section class="newsletter p-30 text-white wow fadeIn animated" style="background-color: #39b4ac;">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-7 mb-md-3 mb-lg-0" style="background-color: #39b4ac;">
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="section-padding footer-mid">
+            <div class="container pt-15 pb-20">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="widget-about font-md mb-md-5 mb-lg-0">
+                            <div class="logo logo-width-1 wow fadeIn animated">
+                                <a href="index.html"><img src="" alt="logo"></a>
+                            </div>
+                            <h5 class="mt-20 mb-10 fw-600 text-grey-4 wow fadeIn animated">Contact</h5>
+                            <p class="wow fadeIn animated">
+                                <strong>Address: </strong>562 Wellington Road, Street 32, San Francisco
+                            </p>
+                            <p class="wow fadeIn animated">
+                                <strong>Phone: </strong>+01 2222 365 /(+91) 01 2345 6789
+                            </p>
+                            <p class="wow fadeIn animated">
+                                <strong>Hours: </strong>10:00 - 18:00, Mon - Sat
+                            </p>
+                            <h5 class="mb-10 mt-30 fw-600 text-grey-4 wow fadeIn animated">Follow Us</h5>
+                            <div class="mobile-social-icon wow fadeIn animated mb-sm-5 mb-md-0">
+                                <a href="#"><img src="/static/assets/imgs/theme/icons/icon-facebook.svg" alt=""></a>
+                                <a href="#"><img src="/static/assets/imgs/theme/icons/icon-twitter.svg" alt=""></a>
+                                <a href="#"><img src="/static/assets/imgs/theme/icons/icon-instagram.svg" alt=""></a>
+                                <a href="#"><img src="/static/assets/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
+                                <a href="#"><img src="/static/assets/imgs/theme/icons/icon-youtube.svg" alt=""></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-3">
+                        <h5 class="widget-title wow fadeIn animated">About</h5>
+                        <ul class="footer-list wow fadeIn animated mb-sm-5 mb-md-0">
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Delivery Information</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms &amp; Conditions</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">Support Center</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2  col-md-3">
+                        <h5 class="widget-title wow fadeIn animated">My Account</h5>
+                        <ul class="footer-list wow fadeIn animated">
+                            <li><a href="#">Sign In</a></li>
+                            <li><a href="#">View Cart</a></li>
+                            <li><a href="#">My Wishlist</a></li>
+                            <li><a href="#">Track My Order</a></li>
+                            <li><a href="#">Help</a></li>
+                            <li><a href="#">Order</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-4">
+                        <h5 class="widget-title wow fadeIn animated">Install App</h5>
+                        <div class="row">
+                            <div class="col-md-8 col-lg-12">
+                                <p class="wow fadeIn animated">From App Store or Google Play</p>
+                                <div class="download-app wow fadeIn animated">
+                                    <a href="#" class="hover-up mb-sm-4 mb-lg-0"><img class="active" src="/static/assets/imgs/theme/app-store.jpg" alt=""></a>
+                                    <a href="#" class="hover-up"><img src="/static/assets/imgs/theme/google-play.jpg" alt=""></a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-12 mt-md-3 mt-lg-0">
+                                <p class="mb-20 wow fadeIn animated">Secured Payment Gateways</p>
+                                <img class="wow fadeIn animated" src="/static/assets/imgs/theme/payment-method.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="container pb-20 wow fadeIn animated">
+            <div class="row">
+                <div class="col-12 mb-20">
+                    <div class="footer-bottom"></div>
+                </div>
+                <div class="col-lg-6">
+                    <p class="float-md-left font-sm text-muted mb-0">&copy; 2021, <strong class="text-brand">Artistic Aur</strong> - HTML Ecommerce Template </p>
+                </div>
+                <div class="col-lg-6">
+                    <p class="text-lg-end text-start font-sm text-muted mb-0">
+                        Designed by <a href="http://alithemes.com/" target="_blank">Alithemes.com</a>. All rights reserved
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+        <script src="/static/assets/js/vendor/modernizr-3.6.0.min.js' "></script>
+        <script src="/static/assets/js/vendor/jquery-3.6.0.min.js' "></script>
+        <script src="/static/assets/js/vendor/jquery-migrate-3.3.0.min.js'"></script>
+        <script src="/static/assets/js/vendor/bootstrap.bundle.min.js'"></script>
+        <script src="/static/assets/js/plugins/slick.js'"></script>
+        <script src="/static/assets/js/plugins/jquery.syotimer.min.js'"></script>
+        <script src="/static/assets/js/plugins/wow.js'"></script>
+        <script src="/static/assets/js/plugins/jquery-ui.js'"></script>
+        <script src="/static/assets/js/plugins/perfect-scrollbar.js'"></script>
+        <script src="/static/assets/js/plugins/magnific-popup.js'"></script>
+        <script src="/static/assets/js/plugins/select2.min.js'"></script>
+        <script src="/static/assets/js/plugins/waypoints.js'"></script>
+        <script src="/static/assets/js/plugins/counterup.js'"></script>
+
+        <script src="/static/assets/js/plugins/images-loaded.js'"></script>
+        <script src="/static/assets/js/plugins/isotope.js'"></script>
+        <script src="/static/assets/js/plugins/scrollup.js'"></script>
+        <script src="/static/assets/js/plugins/jquery.vticker-min.js'"></script>
+        <script src="/static/assets/js/plugins/jquery.theia.sticky.js'"></script>
+        <script src="/static/assets/js/plugins/jquery.elevatezoom.js' "></script>
+
+        <script src="/static/assets/js/main.js'"></script>
+        <script src="/static/assets/js/shop.js'"></script>
+          
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      
+        
+      
+
+    </body>
+    <script>
+
+
+document.querySelectorAll('.quantity-select').forEach(select => {
+        select.addEventListener('change', function() {
+            const productId = this.getAttribute('data-id');
+            const selectedQuantity = parseInt(this.value, 10);
+                console.log(selectedQuantity)
+
+            fetch(`/updatecart/${productId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ change: selectedQuantity })
+
+            }).then(response => {
+                console.log(response);
+                if (response.ok) {
+                
+            return response.json();
+                    
+                } else {
+                    console.error('Failed to update quantity');
+                }
+            }).then((data)=>{
+                console.log(data);
+                
+                const pricePerUnit =data.item.price
+            const subtotalElement = this.closest('tr').querySelector('.subtotal-value');
+
+         
+            const newSubtotal = pricePerUnit * selectedQuantity;
+     
+            subtotalElement.innerText =  `₹ ${newSubtotal.toFixed(2)}`;
+            let newTotalPrice = 0;
+                document.querySelectorAll('.subtotal-value').forEach(subtotalEl => {
+
+                   const value = parseFloat(subtotalEl.innerText.replace('₹ ', ''));
+                    if (!isNaN(parseFloat(value))) {
+                        newTotalPrice += parseFloat(value);}
+                });
+                document.getElementById('totalPrice').innerText = `₹ ${newTotalPrice.toFixed(2)}`;
+                console.log('Quantity updated successfully');
+            }).catch(error => console.error('Error:', error));
+        });
+    });
+
+
+
+
+// document.addEventListener('DOMContentLoaded', () => {
+//             // Handle quantity change
+//             document.querySelectorAll('.quantity-select').forEach(select => {
+//                 select.addEventListener('change', async function () {
+//                     const productId = this.getAttribute('data-id');
+//                     const change = this.value;
+//                     await updateCartQuantity(productId,change);
+//                 });
+//             });
+
+
+
+//         // document.addEventListener('DOMContentLoaded', () => {
+//         //     // Handle quantity increment
+//         //     document.querySelectorAll('.qty-up').forEach(button => {
+//         //         button.addEventListener('click', async function () {
+//         //             const productId = this.getAttribute('data-id');
+//         //             await updateCartQuantity(productId, 1); // Increment by 1
+//         //         });     
+//         //     });
+    
+//         //     // Handle quantity decrement
+//         //     document.querySelectorAll('.qty-down').forEach(button => {
+//         //         button.addEventListener('click', async function () {
+//         //             const productId = this.getAttribute('data-id');
+//         //             await updateCartQuantity(productId, -1); // Decrement by 1
+//         //         });
+//         //     });
+    
+//             // Handle item removal
+            document.querySelectorAll('.action a').forEach(link => {
+                link.addEventListener('click', async function (event) {
+                    event.preventDefault();
+                    const productId = this.getAttribute('href').split('/').pop();
+                    await removeFromCart(productId);
+                });
+            });
+//         });
+    
+//         async function updateCartQuantity(productId,change) {
+//             try {
+//                 const response = await fetch(`/updatecart/${productId}`, {
+//                     method: 'POST',
+//                     headers: {
+//                         'Content-Type': 'application/json'
+//                     },
+//                     body: JSON.stringify({ change })
+//                 });
+//                 const data = await response.json();
+//                 if (data.success) {
+//                     window.location.reload(); // Reload the page to update the cart view
+//                 } else {
+//                     alert('Error updating cart');
+//                 }
+//             } catch (error) {
+//                 console.error('Error:', error);
+//             }
+//         }
+    
+        async function removeFromCart(productId) {
+            try {
+                const response = await fetch(`/removecart/${productId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                if (data.success) {
+                    window.location.reload(); // Reload the page to update the cart view
+                } else {
+                    alert('Error removing item from cart');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    </script>
+        
+    
+</html>

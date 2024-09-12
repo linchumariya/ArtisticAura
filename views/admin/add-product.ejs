@@ -1,0 +1,415 @@
+<%-include("../partials/adminheader.ejs")  %>
+ 
+        <section class="content-main">
+            <form action="/submitProduct" method="post" enctype="multipart/form-data" onsubmit="return validateForm(event)">
+            <div class="row">
+                <div class="col-6">
+                    <div class="content-header">
+                        <h2 class="content-title">Add New Product</h2>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <!-- <div class=""></div> -->
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>1. General info</h6>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label class="form-label">Product Name</label>
+                                        <input type="text" placeholder="Type here" class="form-control" name="productName" 
+                                        id="product_name" onkeyup="validateName()">
+                                        <span id="name-error" style="font-size: 14px; margin-top: -20px"></span>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Description</label>
+                                        <textarea placeholder="Type here" class="form-control" name="description" 
+                                        id="product_description" onkeyup="validateDescription()" rows="4"></textarea>
+                                        <span id="description-error" style="font-size: 14px; margin-top: -20px"></span>
+                                    </div>
+                                 
+                                    <div class="mb-4">
+                                        <label class="form-label">Category</label>
+                                        <select class="form-select" name="category">
+                                            <% categories.forEach(category => { %>
+                                            <option value="<%= category._id %>">
+                                            <%= category.name %>
+                                        </option> <%}); %>
+                                    </select>
+                                        <span id="category-error" style="font-size: 14px; margin-top: -20px"></span>
+                                    </div>
+                                   
+                                </div> <!-- col.// -->
+                            </div> <!-- row.// -->
+                            <div>
+                            <hr class="mb-4 mt-0">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>2. Pricing</h6>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label class="form-label">New price</label>
+                                        <input type="text" placeholder="00.0" class="form-control" name="price" 
+                                         id="product_price" onkeyup="validatePrice()">
+                                        <span id="price-error" style="font-size: 14px; margin-top: -20px"></span>
+                                    </div>
+                                  
+                                    <div class="mb-4">
+                                        <label class="form-label">Old price</label>
+                                        <input type="text" placeholder="00.0" class="form-control" name="oldPrice" 
+                                         id="old_price"  onkeyup="calculateDiscount()"  onkeyup="validateoldprice()">
+                                        <span id="oldprice-error" style="font-size: 14px; margin-top: -20px"></span>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Discount</label>
+                                        <input type="text" placeholder="00.0" class="form-control" name="discount" 
+                                         id="product_discount" readonly ">
+                                        <span id="discount-error" style="font-size: 14px; margin-top: -20px"></span>
+                                    </div>
+                                </div> <!-- col.// -->
+                                </div> <!-- col.// -->
+                            </div> 
+                            <script>
+                                function calculateDiscount() {
+                                    const price = parseFloat(document.getElementById('product_price').value);
+                                    const oldPrice = parseFloat(document.getElementById('old_price').value);
+                                    
+                                    if (!isNaN(price) && !isNaN(oldPrice) && oldPrice > 0) {
+                                        const discount = Math.round(((oldPrice - price) / oldPrice) * 100);
+                                        document.getElementById('product_discount').value = discount;
+                                    } else {
+                                        document.getElementById('product_discount').value = '';
+                                    }
+                                }
+                                </script><!-- row.// -->
+                        </div>
+                            <hr class="mb-4 mt-0">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>3. Stock</h6>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label class="form-label">No of Stocks</label>
+                                        <input type="text" placeholder="Type here" class="form-control" name="stock" 
+                                         id="product_stock" onkeyup="validateStock()">
+                                        <span id="stock-error" style="font-size: 14px; margin-top: -20px"></span>
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- row.// -->
+                           
+                            <hr class="mb-4 mt-0">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>4. Media</h6>
+                                </div>
+                                <div class="col-md-9">
+<!-- --------------------------------------------------------------------------------------- -->
+
+
+<style>
+    .image-preview {
+        width: 679px; /* Adjust as needed */
+        height: 679px; /* Adjust as needed */
+        margin-top: 10px;
+        position: relative;
+        z-index: 10;
+    }
+
+    .img-thumbnail {
+        max-width: 50%;
+        max-height: 50%;
+    }
+
+    .remove-icon {
+        display: none;
+        font-size: 24px;
+        color: red;
+        cursor: pointer;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 20;
+    }
+</style>
+</head>
+<body>
+<form id="image-form">
+    <div class="mb-4">
+        <label class="form-label">Image-1</label>
+        <input class="form-control" id="product_image1" type="file" name="images" accept="image/png, image/jpeg, image/jpg" onchange="previewAndCropImage(event, 1)" required>
+        <span id="image1-error" style="font-size: 14px; margin-top: -20px"></span>
+        <button class="btn btn-link" id="dropdown-trigger1" type="button" onclick="togglePreview(1)">Click Here to Preview</button>
+        <div id="image-preview-container1" class="image-preview mb-2" style="display:none;">
+            <div id="image-preview1" class="image-preview mb-2"></div>
+            <button class="btn btn-secondary mt-2" id="crop-button1" style="display: none;" type="button" onclick="cropImage(1)">Crop</button>
+            <i class="fas fa-sync-alt remove-icon" id="remove-icon1" onclick="removeImage(1)"></i>
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <label class="form-label">Image-2</label>
+        <input class="form-control" id="product_image2" type="file" name="images" accept="image/png, image/jpeg, image/jpg" onchange="previewAndCropImage(event, 2)" required>
+        <span id="image2-error" style="font-size: 14px; margin-top: -20px"></span>
+        <button class="btn btn-link" id="dropdown-trigger2" type="button" onclick="togglePreview(2)">Click Here to Preview</button>
+        <div id="image-preview-container2" class="image-preview mb-2" style="display:none;">
+            <div id="image-preview2" class="image-preview mb-2"></div>
+            <button class="btn btn-secondary mt-2" id="crop-button2" style="display: none;" type="button" onclick="cropImage(2)">Crop</button>
+            <i class="fas fa-sync-alt remove-icon" id="remove-icon2" onclick="removeImage(2)"></i>
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <label class="form-label">Image-3</label>
+        <input class="form-control" id="product_image3" type="file" name="images" accept="image/png, image/jpeg, image/jpg" onchange="previewAndCropImage(event, 3)">
+        <span id="image3-error" style="font-size: 14px; margin-top: -20px"></span>
+        <button class="btn btn-link" id="dropdown-trigger3" type="button" onclick="togglePreview(3)">Click Here to Preview</button>
+        <div id="image-preview-container3" class="image-preview mb-2" style="display:none;">
+            <div id="image-preview3" class="image-preview mb-2"></div>
+            <button class="btn btn-secondary mt-2" id="crop-button3" style="display: none;" type="button" onclick="cropImage(3)">Crop</button>
+            <i class="fas fa-sync-alt remove-icon" id="remove-icon3" onclick="removeImage(3)"></i>
+        </div>
+    </div>
+</form>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+<script>
+    let croppers = {};
+
+    function togglePreview(id) {
+        const dropdownTrigger = document.getElementById(`dropdown-trigger${id}`);
+        const imagePreviewContainer = document.getElementById(`image-preview-container${id}`);
+
+        if (imagePreviewContainer.style.display === "none") {
+            imagePreviewContainer.style.display = "block";
+            dropdownTrigger.textContent = "Hide Image Preview";
+        } else {
+            imagePreviewContainer.style.display = "none";
+            dropdownTrigger.textContent = "Click Here to Preview";
+        }
+    }
+
+    function previewAndCropImage(event, id) {
+        const input = event.target;
+        const file = input.files[0];
+        const errorSpan = document.getElementById(`image${id}-error`);
+        if (file) {
+            if (!file.type.startsWith('image/')) {
+            errorSpan.innerText = "Please upload a valid image file.";
+            errorSpan.style.color = "red"; // Set error message color to red
+            input.value = ''; // Clear the file input
+            return;
+        } else {
+            errorSpan.innerText = ""; // Clear any previous error message
+        }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const previewContainer = document.getElementById(`image-preview${id}`);
+                previewContainer.innerHTML = `<img id="image-to-crop${id}" src="${e.target.result}" class="img-fluid"/>`;
+
+                const cropButton = document.getElementById(`crop-button${id}`);
+                cropButton.style.display = 'inline-block';
+
+                const removeIcon = document.getElementById(`remove-icon${id}`);
+                removeIcon.style.display = 'inline-block';
+
+                const image = document.getElementById(`image-to-crop${id}`);
+
+                if (croppers[id]) {
+                    croppers[id].destroy();
+                }
+
+                croppers[id] = new Cropper(image, {
+                    aspectRatio: 1,
+                    viewMode: 3,
+                    autoCropArea: 1,
+                    responsive: true,
+                    scalable: true,
+                    zoomable: true,
+                    background: false,
+                    minContainerWidth: 679,
+                    minContainerHeight: 679
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function cropImage(id) {
+        const previewContainer = document.getElementById(`image-preview${id}`);
+        const croppedCanvas = croppers[id].getCroppedCanvas({
+            width: 679,
+            height: 679
+        });
+        const croppedImage = document.createElement('img');
+        croppedImage.src = croppedCanvas.toDataURL('image/png');
+        previewContainer.innerHTML = '';
+        previewContainer.appendChild(croppedImage);
+
+        croppedCanvas.toBlob(blob => {
+            const fileInput = document.getElementById(`product_image${id}`);
+            const dataTransfer = new DataTransfer();
+            const file = new File([blob], fileInput.files[0].name, { type: 'image/png' });
+            dataTransfer.items.add(file);
+            fileInput.files = dataTransfer.files;
+        }, 'image/png');
+    }
+
+    function removeImage(id) {
+        const input = document.getElementById(`product_image${id}`);
+        const previewContainer = document.getElementById(`image-preview${id}`);
+        const cropButton = document.getElementById(`crop-button${id}`);
+        const removeIcon = document.getElementById(`remove-icon${id}`);
+        
+        input.value = '';
+        previewContainer.innerHTML = '';
+        cropButton.style.display = "none";
+        removeIcon.style.display = "none";
+
+        if (croppers[id]) {
+            croppers[id].destroy();
+            delete croppers[id];
+        }
+    }
+
+    document.getElementById('image-form').addEventListener('submit', function(event) {
+        for (let id in croppers) {
+            if (croppers[id]) {
+                croppers[id].destroy();
+            }
+        }
+    });
+</script>
+                           </div> <!-- col.// -->
+                            </div>
+                        <div>
+                            <hr class="mb-4 mt-0">
+                                <button class="btn btn-md rounded font-sm hover-up" type="submit"  >Submit</button>
+                                <span id="submit-error" style="font-size: 14px; margin-top: -20px"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+     
+            </div>
+        </section>
+       
+    
+    <%-include("../partials/adminfooter.ejs")  %>  
+
+<script>
+    var nameError = document.getElementById("name-error");
+    var descriptionError = document.getElementById("description-error");
+    var priceError = document.getElementById("price-error");
+    var oldpriceError = document.getElementById("oldprice-error");
+    var imageError = document.getElementById("image-error");
+    var stockError = document.getElementById("stock-error");
+    var submitError = document.getElementById("submit-error");
+   
+ 
+
+    function validateName() {
+        var name = document.getElementById("product_name").value.trim();
+        if (name.length === 0) {
+            nameError.innerHTML = "Product name is required";
+            nameError.style.color = "red";
+            return false;
+        }
+        nameError.innerHTML = "Valid";
+        nameError.style.color = "green";
+        return true;
+    }
+
+  
+
+    function validateDescription() {
+        var desc = document.getElementById("product_description").value.trim();
+        if (desc.length === 0) {
+            descriptionError.innerHTML = "Description is required";
+            descriptionError.style.color = "red";
+            return false;
+        }
+        descriptionError.innerHTML = "Valid";
+        descriptionError.style.color = "green";
+        return true;
+    }
+
+    function validatePrice() {
+        var price = document.getElementById("product_price").value.trim();
+        if (price.length === 0 || isNaN(price) || parseFloat(price) <= 0) {
+            priceError.innerHTML = "Price is required and must be a positive number, should be lesser than Old price";
+            priceError.style.color = "red";
+            return false;
+        }
+        priceError.innerHTML = "Valid";
+        priceError.style.color = "green";
+        return true;
+    }
+
+
+    
+function validateoldprice() {
+    var price = document.getElementById("old_price").value.trim();
+    var newPrice = document.getElementById("product_price").value.trim();
+    if (price.length === 0 || isNaN(price) || parseFloat(price) <= 0 || price < newPrice) {
+        oldpriceError.innerHTML = "Old price is required and must be a positive number, should be greater than New price";
+        oldpriceError.style.color = "red";
+        return false;
+    }
+    oldpriceError.innerHTML = "Valid";
+    oldpriceError.style.color = "green";
+    return true;
+}
+
+   
+
+    function validateStock() {
+        var stock = document.getElementById("product_stock").value.trim();
+        if (stock.length === 0 || isNaN(stock) || parseInt(stock) < 0) {
+            stockError.innerHTML = "Stock is required and must be a non-negative number";
+            stockError.style.color = "red";
+            return false;
+        }
+        stockError.innerHTML = "Valid";
+        stockError.style.color = "green";
+        return true;
+    }
+
+   
+
+    function validateForm() {
+        if (
+            !validateName() ||
+            !validateDescription() ||
+            !validatePrice() ||
+            !validateoldprice() ||
+            !validateStock()
+            
+        ) {
+            submitError.style.display = "block";
+            submitError.innerHTML = "Please enter all the fields correctly.";
+            submitError.style.color = "red";
+            submitError.style.float = "right"; 
+            setTimeout(function () {
+                submitError.style.display = "none";
+                
+            }, 3000);
+            return false;
+        }
+        return true;
+    }
+
+ //------------------------------------------------------------------------------------
+ 
+ 
+</script> 
+      
+
+   

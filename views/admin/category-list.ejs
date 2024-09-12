@@ -1,0 +1,144 @@
+<%- include("../partials/adminheader.ejs") %>
+
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Categories</h2>
+            <p>Add, edit, or delete a category</p>
+        </div>
+        
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <form id="categoryForm">
+                        <div class="mb-4">
+                            <label for="categoryName" class="form-label">Name</label>
+                            <input type="text" name="name" placeholder="Type here" class="form-control" id="categoryName" />
+                            <span id="categoryName-error" style="color:red;"></span>
+                        </div>
+                        <div class="mb-4">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea name="description" placeholder="Type here" class="form-control" id="description"></textarea>
+                            <span id="description-error" style="color:red;"></span>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Create Category</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-9">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Edit</th>
+                                    <th>Status</th>
+                                    <th>List/Unlist</th>
+                                </tr>
+                            </thead>
+                            <tbody id="categoryTableBody">
+                                <% data.forEach((row) => { %>
+                                <tr>
+                                    <td><%= row.name %></td>
+                                    <td><%= row.description %></td>
+                                    <td>
+                                        <a href="/editcategory?id=<%= row._id %>"><i class="fas fa-pencil-alt"></i> Edit</a>
+                                    </td>
+                                    <td>
+                                        <% if (row.islisted) { %>
+                                            <span class="badge rounded-pill alert-success">Listed</span>
+                                        <% } else { %>
+                                            <span class="badge rounded-pill alert-danger">Unlisted</span>
+                                        <% } %>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-toggle-status" data-id="<%= row._id %>" style="background-color: <%= row.islisted ? "red" : "green" %>; color: white;">
+                                            <%= row.islisted ? 'Unlist' : 'List' %>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+    // Handle category submission
+    document.getElementById('categoryForm').addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const categoryName = document.getElementById('categoryName').value.trim();
+        const description = document.getElementById('description').value.trim();
+        const alphabetRegex = /^[a-zA-Z.\s]+$/;
+
+        // Validation
+        if (!categoryName) {
+            document.getElementById('categoryName-error').innerText = 'Name is required';
+            return;
+        } else if (!alphabetRegex.test(categoryName)) {
+            document.getElementById('categoryName-error').innerText = 'Category Name should contain only alphabets';
+            return;
+        } else {
+            document.getElementById('categoryName-error').innerText = '';
+        }
+
+        if (!description) {
+            document.getElementById('description-error').innerText = 'Description is required';
+            return;
+        } else {
+            document.getElementById('description-error').innerText = '';
+        }
+
+        try {
+            const response = await fetch('/addCategory', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name: categoryName, description })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert(result.message);
+                window.location.href = result.redirect;
+            } else {
+                document.getElementById('categoryName-error').innerText = result.message;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An unexpected error occurred. Please try again.');
+        }
+    });
+
+    // Handle category status toggle (List/Unlist)
+    document.querySelectorAll('.btn-toggle-status').forEach(button => {
+        button.addEventListener('click', async function () {
+            const categoryId = this.getAttribute('data-id');
+            try {
+                const response = await fetch(`/toggleCategoryStatus?id=${categoryId}`, { method: 'POST' });
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    console.error('Error updating category status.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    });
+});
+
+</script>
+
+
+
