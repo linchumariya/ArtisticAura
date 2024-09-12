@@ -20,8 +20,8 @@ userRoute.get('/resendOtp',usercontroller.resendOtp)
 userRoute.get('/',usercontroller.loadHome)
 userRoute.get('/productdetails/:id',usercontroller.getUserProductDetalis)
 
-userRoute.get('/googlein',googleMw.googleAuth);
-userRoute.get('/googlecallback',googleMw.googleAuthCallback);
+userRoute.get('/auth/google',googleMw.googleAuth);
+userRoute.get('/auth/google/callback',googleMw.googleAuthCallback);
 
 
 

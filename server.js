@@ -3,6 +3,8 @@ const session = require("express-session");
 const bodyparser = require("body-parser");
 const path = require("path");
 const userRoute = require("./routes/userroutes");
+const passport = require('passport');
+
 const dotenv=require('dotenv').config();
 
 const app = express();
@@ -26,9 +28,12 @@ app.use(
   session({
     secret: "yourSecretKey",
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    cookie: { secure: false },
   })
 );
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/", userRoute);

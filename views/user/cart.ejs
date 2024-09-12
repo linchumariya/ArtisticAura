@@ -15,6 +15,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-12">
+                    <% if (userCart && userCart.items.length > 0) { %>
                     <div class="table-responsive">
                             <table class="table shopping-summery text-center clean">
                                 <thead>
@@ -79,13 +80,16 @@
                                             </tr>
                                         </tbody>
                                     </table>
+                              
                                 </div>
                                 <div>
                                     <a href="/checkout" class="btn" >
                                         <i class="fi-rs-box-alt mr-10"></i> Proceed To CheckOut
                                     </a>
                                 </div>
-                                
+                                <% } else { %>
+                                    <p>No items found in your cart.</p>
+                                <% } %>
                             </div>
                         </div>
                     </div>

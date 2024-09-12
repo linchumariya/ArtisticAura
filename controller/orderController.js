@@ -12,7 +12,7 @@ const getCheckout = async (req, res) => {
         const userId = req.session.user;
 
      
-        const userCart = await cartModel.findOne({ userId }).populate({path:'items.product',model:"product"});
+        const userCart = await cartModel.findOne({ userId }).populate({path:'items.product',model:"Product"});
         console.log(userCart)
 
        

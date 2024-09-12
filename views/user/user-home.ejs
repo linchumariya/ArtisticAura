@@ -50,36 +50,57 @@
         window.location.href = "?hideOutOfStock=" + hideOutOfStock;
 }
 </script>
-<script>function addToWishlist(productId) {
-    fetch(`/addToWishlist/${productId}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ productId: productId }),
-    })
-    .then(response => {
-        if (response.ok) {
-            return response.json();
-        } else {
-            throw new Error('Failed to add to wishlist.');
-        }
-    })
-    .then(data => {
-        if (data.success) {
-            alert('Product added to wishlist successfully!');
-            
-        } else {
-            alert('Product is already in your wishlist.');
-        }
-    })
-  
+<script>
+async function addToWishlist(productId,user) {
 
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while adding to the wishlist.');
-    });
-}</script>
+if (user) {
+    try {
+        const response = await axios.post(`/addToWishlist/${productId}`);
+      
+        if (response.data.success) {
+            Swal.fire({
+                title: 'Added to Wishlist',
+                text: response.data.message,
+                icon: 'success',
+                confirmButtonColor: '#28a745'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/wishlist';
+                }
+            });
+        }}
+            catch (error) {
+        console.error(error);
+         if (error.response && error.response.status === 409) {
+            Swal.fire({
+                title: 'Already in Wishlist',
+                text: 'The product is already in your wishlist.',
+                icon: 'warning',
+                confirmButtonColor: '#ffc107'
+            });
+        } else {
+
+            Swal.fire({
+                title: 'Error Adding Product to Wishlist',
+                text: 'There was an error adding the product to your wishlist.',
+                icon: 'error',
+                confirmButtonColor: '#dc3545'
+            });
+        }
+    }}
+    else  {
+            Swal.fire({
+                title: 'Please Log In',
+                text: 'Please log in to add items to your wishlist.',
+                icon: 'warning',
+                confirmButtonColor: '#ffc107'
+            }).then(() => {
+                window.location.href = '/login'; 
+            });
+
+         }
+}
+</script>
 <main class="main">
        
         <section class="product-tabs pt-25 pb-20 wow fadeIn animated">
@@ -154,7 +175,7 @@
                                                 </div>
                                                 <% if(row.stock > 0) { %>
                                                 <div class="product-action-1">
-                                                    <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addToWishlist('<%= row._id %>')" ><i class="fi-rs-heart"></i></a>
+                                                    <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addToWishlist('<%= row._id %>','<%= user ? user._id : null %>')" ><i class="fi-rs-heart"></i></a>
                                                 </div>
                                                 <% } else { %>
                                                     <div class="product-action-1">

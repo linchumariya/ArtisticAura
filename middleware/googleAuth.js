@@ -1,16 +1,20 @@
 const passport = require('passport')
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 require('dotenv').config()
-const googleAuthUsers = require('../model/googleModel')
+const googleAuthUsers = require('../model/userModel')
 
 
 passport.serializeUser((user, done) => {
+  // console.log('Serializing user:', user.id);
     done(null, user.id);
   });
   
   passport.deserializeUser(async (id, done) => {
+    // console.log('Deserializing user:', id);
     try {
       const user = await googleAuthUsers.findById(id);
+      console.log("user is",user);
+      
       done(null, user);
     } catch (err) {
       done(err, null);
@@ -53,10 +57,10 @@ passport.serializeUser((user, done) => {
     }),
   
     googleAuthCallback: passport.authenticate('google', {
-        failureRedirect: '/user/login',
+        failureRedirect: '/login',
         successRedirect: '/', // Redirect to your dashboard or home page
-      }),
-    
+       
+    })
   };
 
 module.exports = authController;
