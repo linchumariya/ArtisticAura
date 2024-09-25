@@ -4,6 +4,7 @@ const adminController = require("../controller/adminController");
 const categoryController = require("../controller/categoryController");
 const productController = require("../controller/productController");
 const customerController = require("../controller/customerController");
+const adminOrderController=require("../controller/adminOrderController")
 const user=require("../middleware/user")
 
 adminRoute.get("/adminlogin", adminController.adminloginLoad);
@@ -30,4 +31,6 @@ adminRoute.post("/updatecategory/:id", categoryController.updateCategory);
 adminRoute.get('/customers',user.adminAuth, customerController.loadcustomermanagement);
 adminRoute.post('/customerunlist/:id',user.adminAuth,customerController.blockOrUnblockcustomer)
 
+adminRoute.get('/getOrder', user.adminAuth, adminOrderController.getOrder)
+adminRoute.get('/getOrderDetails/:Id', user.adminAuth, adminOrderController.getOrderDetails)
 module.exports = adminRoute;

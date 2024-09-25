@@ -39,7 +39,7 @@
                             <td><%= row.name %></td>
                             <td><%= row.email %></td>
                             <td><%= row.phone %></td>
-                            <!-- <td><%= row.password %></td>/ -->
+                           
                             <td>
                                 <% if (row.isBlocked===false) { %>
                                     <span class="badge rounded-pill alert-success">UnBlocked</span>
@@ -115,69 +115,57 @@
     <!-- Pagination Section End -->
 </section> <!-- content-main end// -->
 
+
+
 <script>
-
-function blockOrUnblockcustomer(userId, clicked) {
-let confirmationMessage;
-alert(clicked)
-if (clicked === 'Unblock') {
-    confirmationMessage = "Are you sure you want to UnBlock this user?";
-} else {
-    confirmationMessage = "Are you sure you want to Block this user?";
-}
-
-swal({
-    text: confirmationMessage,
-    buttons: ["cancel", true],
-}).then((result) => {
-   
-    if (result === true) {
-        // $.ajax({
-        //     url: `/customerunlist?id=${productId}`,
-        //     method: 'PATCH',
-        //     contentType: 'application/json',
-        //     success: function (response) {
-        //         if (response.success) {
-        //             if (clicked === 'Unlist') {
-        //                 swal("user UnBlocked!", {
-        //                     icon: "success",
-        //                 }).then(() => {
-        //                     location.reload();
-        //                 });
-        //             } else {
-        //                 swal("User Blocked!", {
-        //                     icon: "success",
-        //                 }).then(() => {
-        //                     location.reload();
-        //                 });
-        //             }
-        //         } else {
-        //             console.error('Blocking/Unblocking failed');
-        //         }
-        //     },
-        //     error: function (xhr, status, error) {
-        //         console.error('Ajax error:', error);
-        //     }
-        // });
-alert(userId)
-        fetch(`/customerunlist/${userId}`, {
-                method: 'POST'                     
-            }).then(response => {
-                if (response.ok) {
-                    alert(response)
-                    console.log(response)
-                    location.reload();
-                } else {
-                    console.error('Error block/unblock user.');
-                }
-            }).catch(error => {
-                console.error('Error:', error);
-            });
+    function blockOrUnblockcustomer(userId, action) {
+        let confirmationMessage = action === 'Unblock' ? "Are you sure you want to UnBlock this user?" : "Are you sure you want to Block this user?";
+        console.log(confirmationMessage)
+        Swal.fire({
+            text: confirmationMessage,
+            showCancelButton: true,
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+        }).then((result) => {
+            console.log(result);
+            
+            if (result.isConfirmed) {
+                fetch(`/customerunlist/${userId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+               
+                .then(response => response.json()) // Parse JSON response
+                .then(data => {
+                    console.log(data);
+                    
+                    if (data.success) {
+                        Swal.fire({
+                            text: action === 'Unblock' ? "User Unblocked!" : "User Blocked!",
+                            icon: "success",
+                        }).then(() => {
+                            location.reload(); // Reload the page to reflect changes
+                        });
+                    } else {
+                        Swal.fire({
+                            text: "Failed to Block/Unblock user.",
+                            icon: "error",
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        text: "An error occurred. Please try again later.",
+                        icon: "error",
+                    });
+                });
+            }
+        });
     }
-});
-}
-
-
-</script>
+    </script>
+    
 
 <%- include ('../partials/adminfooter') %>

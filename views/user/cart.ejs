@@ -272,40 +272,6 @@ document.querySelectorAll('.quantity-select').forEach(select => {
             }).catch(error => console.error('Error:', error));
         });
     });
-
-
-
-
-// document.addEventListener('DOMContentLoaded', () => {
-//             // Handle quantity change
-//             document.querySelectorAll('.quantity-select').forEach(select => {
-//                 select.addEventListener('change', async function () {
-//                     const productId = this.getAttribute('data-id');
-//                     const change = this.value;
-//                     await updateCartQuantity(productId,change);
-//                 });
-//             });
-
-
-
-//         // document.addEventListener('DOMContentLoaded', () => {
-//         //     // Handle quantity increment
-//         //     document.querySelectorAll('.qty-up').forEach(button => {
-//         //         button.addEventListener('click', async function () {
-//         //             const productId = this.getAttribute('data-id');
-//         //             await updateCartQuantity(productId, 1); // Increment by 1
-//         //         });     
-//         //     });
-    
-//         //     // Handle quantity decrement
-//         //     document.querySelectorAll('.qty-down').forEach(button => {
-//         //         button.addEventListener('click', async function () {
-//         //             const productId = this.getAttribute('data-id');
-//         //             await updateCartQuantity(productId, -1); // Decrement by 1
-//         //         });
-//         //     });
-    
-//             // Handle item removal
             document.querySelectorAll('.action a').forEach(link => {
                 link.addEventListener('click', async function (event) {
                     event.preventDefault();
@@ -313,27 +279,6 @@ document.querySelectorAll('.quantity-select').forEach(select => {
                     await removeFromCart(productId);
                 });
             });
-//         });
-    
-//         async function updateCartQuantity(productId,change) {
-//             try {
-//                 const response = await fetch(`/updatecart/${productId}`, {
-//                     method: 'POST',
-//                     headers: {
-//                         'Content-Type': 'application/json'
-//                     },
-//                     body: JSON.stringify({ change })
-//                 });
-//                 const data = await response.json();
-//                 if (data.success) {
-//                     window.location.reload(); // Reload the page to update the cart view
-//                 } else {
-//                     alert('Error updating cart');
-//                 }
-//             } catch (error) {
-//                 console.error('Error:', error);
-//             }
-//         }
     
         async function removeFromCart(productId) {
             try {

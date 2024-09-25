@@ -1,6 +1,14 @@
 const mongoose= require('mongoose')
 const moment= require('moment')
 const orderSchema=mongoose.Schema({
+    trackingId:{
+        type:String,
+        default:function(){
+            return Math.floor(100000+Math.random()*900000).toString()
+        },
+        unique:true
+    },
+    
     userId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'User',
@@ -49,6 +57,15 @@ const orderSchema=mongoose.Schema({
     paymentMethod: {
         type: String,
         required: true,
+        },
+        paymentStatus: {
+            type: String,
+            required: true,
+            default: 'pending'
+        },
+        discountAmount: {
+            type: Number,
+            default: 0
         },
     orderDate:{
             type:Date,

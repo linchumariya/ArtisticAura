@@ -3,13 +3,14 @@ const bcrypt = require("bcrypt");
 const ProductModel=require('../model/productModel')
 const CategoryModel=require('../model/categoryModel')
 const AddressModel=require('../model/addressModel')
-const mongoose=require('mongoose')
+const mongoose=require('mongoose');
+const user = require("../middleware/user");
 
 const getAddress =async (req, res) => {
   try {
 
     const userId  = req.session.user._id
-    // console.log(userId)
+    console.log(userId)
     const addressDocument = await AddressModel.findOne({userId:userId});
     //const addresses = AddressModel.find({})
 
@@ -30,9 +31,10 @@ const getAddress =async (req, res) => {
   };
 const getAddAddress=async(req,res)=>{
   try {
-  
+      console.log("user of address is",req.session.user)
     res.render("user/addaddress",{
       user:req.session.user
+
     })
     
   } catch (error) {
@@ -44,120 +46,42 @@ const getAddAddress=async(req,res)=>{
     try {
 
       const userId  = req.session.user._id
-      let userAddress=await AddressModel.findOneAndUpdate({userId:userId});
+      let userAddress=await AddressModel.findOne({userId:userId});
+      const newAddress = {
+        buildingname: req.body.buildingname,
+        pincode: req.body.pincode,
+        street: req.body.street,
+        city: req.body.city,
+        state: req.body.state,
+        country: req.body.country,
+      };
       
-      // console.log("post",userAddress)
-
-      // console.log(req.body.buildingname,req.body.pincode,req.body.city,req.body.state,req.body.street,req.body.country)
 
       if (!userAddress) {
         // console.log("new address");
         userAddress = new AddressModel({
             userId: userId,
-            addresses: [{
-                buildingname: req.body.buildingname,
-                pincode: req.body.pincode,
-                street: req.body.street,
-                city: req.body.city,
-                state: req.body.state,
-                country: req.body.country,
-            }]
+            addresses: [newAddress]
         });
-    
-        // Save the new userAddress to the database
-        await userAddress.save();
+      
     } else {
-        // Push the new address into the existing addresses array
-        userAddress.addresses.push({
-            buildingname: req.body.buildingname,
-            pincode: req.body.pincode,
-            street: req.body.street,
-            city: req.body.city,
-            state: req.body.state,
-            country: req.body.country,
-        });
-    
-        // Save the updated userAddress to the database
-        await userAddress.save();
-    }
-    
-      // if(!userAddress){
-      //   console.log("new address")
-      //   userAddress=new AddressModel({
-      //     userId:userId,
-      //     address:[{
-      //       buildingname:req.body.buildingname,
-      //       pincode:req.body.pincode,
-      //       city:req.body.city,
-      //       state:req.body.state,
-      //       street:req.body.street,
-      //       country:req.body.country,
-      //     }]
-      //   });
-      // }else{
-      //   userAddress.address.push({
-      //     buildingname:req.body.buildingname,
-      //     pincode:req.body.pincode,
-      //     city:req.body.city,
-      //     state:req.body.state,
-      //     street:req.body.street,
-      //     country:req.body.country,
-      //   });    
-      // }
-
-    //   try {
-    //     await userAddress.save();
-    // } catch (error) {
-    //     console.error('Error saving address:', error);
-    // }
-    //   // await userAddress.save();
-    //   console.log("address is saved")
-
-      // res.status(200).render('user/addressview',{
-      //   message:'Address addeed sucessfully',
-      //   user:req.session.user,
-      //   addresses:userAddress.address
-      // })
-
-      res.redirect('/addressview')
+      
+        userAddress.addresses.push(newAddress);
         
-
+    }
+    await userAddress.save();
+      res.redirect('/addressview');
       
     } catch (error) {
       console.log(error);
     }
-  }
-// const deleteAddress=async(req,res)=>{
-//   try {
-//     const addressid=req.params.id;
-//     console.log("im in delete",addressid)
-//     const userId=req.session.user._id;
-//     console.log("im delete user",userId)
-
-
-//     const objectId = new mongoose.Types.ObjectId(addressid);
-
-
-//     await AddressModel.findOneAndUpdate(
-//       {userId:userId},
-//       {$pull:{address:{_id:objectId}}},
-//       {new:true}
-//     )
-//     return res.status(200).json({ success: true, message: "Removed successfully" });
-    
-//   } catch (error) {
-//     console.log(error);
-    
-//   }
-// }
+  };
 
 
 const deleteAddress = async (req, res) => {
   try {
     const addressId = req.params.id;
     const userId = req.session.user._id;
-
-
     const objectId = new mongoose.Types.ObjectId(addressId);
 
 
@@ -218,13 +142,12 @@ address.buildingname = req.body.buildingname,
 
             await userAddress.save();
           
-            res.redirect('/addressview')}
+            res.redirect('/addressview')
+          }
             catch (error) {
               console.log(error.message);
             }
-
-
-}
+};
   
 
   module.exports = {getAddress,getAddAddress,postEditAddress,getEditAddress,deleteAddress,postAddAddress}

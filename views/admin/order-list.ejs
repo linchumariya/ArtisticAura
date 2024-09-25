@@ -1,0 +1,123 @@
+<%-include("../partials/adminheader.ejs")  %>
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Order List</h2>
+                    <p>Add,Edit or Delete a Order</p>
+                </div>
+                <div>
+                    <a href="/addProduct" class="btn btn-primary"><i class="text-muted material-icons md-post_add"></i>Add Product</a>
+                </div>
+             
+            </div>
+            <div class="card mb-4">
+                <header class="card-header">
+                   
+                </header> <!-- card-header end// -->
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Sl No.</th>
+                                    <th>Name </th>
+                                    <th>Email</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th scope="col" class="text-end"> Action </th>
+                                    <th> </th>
+                                    
+                                    
+                                </tr>
+                            </thead>
+                                <tbody>
+                                    <% order.forEach((row,index)=>{ %>
+                                        <tr>
+                                            <td><%= index +1 %></td>
+                                    
+                                            <td><%= row.billingdetails.name %></td>
+                                            <td><%= row.billingdetails.email %></td>
+                                            <td><%= row.totalPrice %></td>
+                                            <td><%= row.orderStatus %></td>
+                                            <td><%= row.orderDate %></td>
+                                            <td class="text-end">
+                                                <a href="/getOrderDetails/<%= row._id %>" class="btn btn-md rounded font-sm">Detail</a>
+                                            </td>
+                                        </tr>
+
+                                   <%  })%> 
+                                </tbody>
+
+        
+                            </div> <!-- table-responsive//end -->
+                        </div>
+                        <!-- card-body end// -->
+                    </div>
+
+        <!-- Pagination Section Begin -->
+        <div class="pagination-area mt-15 mb-50">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <% if (currentPage > 1) { %>
+                        <li class="page-item">
+                            <a class="page-link pagination-link" href="?page=<%= prevPage %>" data-page="<%= prevPage %>">
+                                <i class="material-icons md-chevron_left"></i>
+                            </a>
+                        </li>
+                    <% } %>
+                    <% if (currentPage > 2) { %>
+                        <li class="page-item">
+                            <a class="page-link pagination-link" href="?page=1" data-page="1">1</a>
+                        </li>
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    <% } %>
+                    <% if (currentPage > 1) { %>
+                        <li class="page-item">
+                            <a class="page-link pagination-link" href="?page=<%= currentPage - 1 %>" data-page="<%= currentPage - 1 %>"><%= currentPage - 1 %></a>
+                        </li>
+                    <% } %>
+                    <li class="page-item active">
+                        <span class="page-link"><%= currentPage %></span>
+                    </li>
+                    <% if (hasNextPage) { %>
+                        <li class="page-item">
+                            <a class="page-link pagination-link" href="?page=<%= currentPage + 1 %>" data-page="<%= currentPage + 1 %>"><%= currentPage + 1 %></a>
+                        </li>
+                    <% } %>
+                    <% if (nextPage !== lastPage && currentPage !== lastPage) { %>
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                        <li class="page-item">
+                            <a class="page-link pagination-link" href="?page=<%= lastPage %>" data-page="<%= lastPage %>"><%= lastPage %></a>
+                        </li>
+                    <% } %>
+                    <% if (currentPage !== lastPage) { %>
+                        <li class="page-item">
+                            <a class="page-link pagination-link" href="?page=<%= nextPage %>" data-page="<%= nextPage %>">
+                                <i class="material-icons md-chevron_right"></i>
+                            </a>
+                        </li>
+                    <% } %>
+                </ul>
+            </nav>
+        </div>
+        <!-- Pagination Section End -->
+
+        </section> <!-- content-main end// -->
+       <%-include("../partials/adminfooter.ejs")  %>
+       <script>
+        function confirmList(Id){
+            if(confirm("Are you sure to list this ")){
+                window.location.href="/list"+Id;
+            }
+        }
+        function confirmUnlist(Id){
+            if(confirm("Are you sure to unlist this")){
+                window.location.href="/unlist"+Id;
+            }
+        }
+       </script>
+       
+       
+       
+      

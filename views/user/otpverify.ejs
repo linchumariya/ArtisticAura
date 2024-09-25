@@ -1,119 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OTP Verification</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+      /* Your custom styles here */
+      .container {
+        height: 100vh;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div
+      class="container d-flex justify-content-center align-items-center"
+    >
+      <div class="position-relative">
+        <div class="card p-4 text-center">
+          <h6>
+            Please enter the one-time password <br />
+            to verify your account
+          </h6>
+          <div>
+            <span>OTP code has been sent to your email</span>
+          </div>
+
+          <form action="/otpverify" method="POST" id="otpForm">
+            <div
+              id="otp"
+              class="inputs d-flex flex-row justify-content-center mt-3"
+            >
+              <input
+                class="m-2 text-center form-control rounded"
+                type="text"
+                name="otp"
+                id="otpInput"
+                maxlength="6"
+                placeholder="Enter OTP"
+                required
+              />
+            </div>
+            <input type="hidden" name="email" value="<%= email %>" />
+            <div class="mt-4">
+              <input
+                type="submit"
+                value="Submit"
+                class="btn btn-danger px-4 verify"
+              />
+            </div>
+
+            <!-- Resend button, initially hidden -->
+            <div class="mt-4" id="resend-container" style="display: none">
+              <a href="/resendOtp?email=<%= email %>">
+                <input
+                  type="button"
+                  value="Resend OTP"
+                  class="btn btn-primary px-4 verify"
+                />
+              </a>
+            </div>
+
+            <!-- Countdown Timer -->
+            <div id="countdown" class="mt-3">5:00</div>
+          </form>
+        </div>
+      </div>
+    </div>
+
     
-<style>
-    body{background-color:rgb(224, 200, 200)}.height-100{height:100vh}.card{width:400px;border:none;height:300px;box-shadow: 0px 5px 20px 0px #d2dae3;z-index:1;display:flex;justify-content:center;align-items:center}.card h6{color:red;font-size:20px}.inputs input{width:40px;height:40px}input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button{-webkit-appearance: none;-moz-appearance: none;appearance: none;margin: 0}.card-2{background-color:#fff;padding:10px;width:350px;height:100px;bottom:-50px;left:20px;position:absolute;border-radius:5px}.card-2 .content{margin-top:50px}.card-2 .content a{color:red}.form-control:focus{box-shadow:none;border:2px solid red}.validate{border-radius:20px;height:40px;background-color:red;border:1px solid red;width:140px}
-</style>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
+    <script>
+      var message = "<%= message %>" || null;
+      var alertType = "<%= alertType %>" || null;
+      let seconds = 300; // 5 minutes
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ArtisticAura</title>
-</head>
-
-<body>
-    
-
-
-    <div class="container height-100 d-flex justify-content-center align-items-center">
-        <div class="position-relative">
-            <div class="card p-2 text-center">
-                <h6>Please enter the one-time password <br> to verify your account</h6>
-                <div>
-                    <span>OTP code has been sent to your mail</span>
-                </div>
-                <form action="/otpverify" method="POST" id="otpForm">
-                    <div id="otp" class="inputs d-flex flex-row justify-content-center mt-2">
-                        <input class="m-2 text-center form-control rounded" type="text" name="val1" id="first"
-                            maxlength="1" />
-                        <input class="m-2 text-center form-control rounded" type="text" name="val2" id="second"
-                            maxlength="1" />
-                        <input class="m-2 text-center form-control rounded" type="text" name="val3" id="third"
-                            maxlength="1" />
-                        <input class="m-2 text-center form-control rounded" type="text" name="val4" id="fourth"
-                            maxlength="1" />
-                        <input class="m-2 text-center form-control rounded" type="text" name="val5" id="fifth"
-                            maxlength="1" />
-                        <input class="m-2 text-center form-control rounded" type="text" name="val6" id="sixth"
-                            maxlength="1" />
-                    </div>
-                    <input type="hidden" name="email" value="<%= email %>">
-                    <div class="mt-4">  
-                        <input type="submit" value="Submit" class="btn btn-danger px-4 verify">
-                    </div>
-                    <div class="mt-4" id="resend-container" style="display:none">  
-                        <a href="/resendOtp?email=<%= email %>"><input type="button" value="Resend" class="btn btn-primary px-4 verify"></a>
-                    </div>
-                    <div id="timer">1:00</div>
-
-<script>
-    let seconds = 300;
-
-    function updateTimer() {
-        const timerElement = document.getElementById('timer');
+      // Update the countdown timer
+      function updateTimer() {
+        const timerElement = document.getElementById("countdown");
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
+        timerElement.textContent = `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+      }
 
-        timerElement.textContent = `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
-    }
-
-    function startTimer() {
+      // Start the countdown timer
+      function startTimer() {
+        console.log("iam counter")
         updateTimer();
         const timerInterval = setInterval(() => {
-            seconds--;
-
-            if (seconds < 0) {
-                clearInterval(timerInterval);
-                alert('Time is up!');
-                document.getElementById("resend-container").style.display='block';
-               sessionStorage.setItem("otpResendVisible","true");
-                alert('Time is up!');
-            } else {
-                updateTimer();
-            }
+          seconds--;
+          if (seconds >= 0) {
+            updateTimer(); // Update the timer every second
+          } else {
+            clearInterval(timerInterval);
+            Swal.fire({
+              icon: "error",
+              title: "Time is up!",
+              text: "Please request a new OTP code.",
+              confirmButtonColor: "#dc3545",
+            });
+            document.getElementById("resend-container").style.display = "block"; // Show resend button
+            sessionStorage.setItem("otpResendVisible", "true"); // Store resend visibility
+          } 
         }, 1000);
-    }
+      }
 
+      window.onload = () => {
+        // Start the countdown on page load
+        
+        startTimer();
+
+        // Show alert if message exists
+        if (message && alertType) {
+          Swal.fire({
+            icon: alertType,
+            title: message,
+            confirmButtonColor: "#28a745",
+          }).then((result) => {
+            if (result.isConfirmed && alertType === "success") {
+              window.location.href = "/login";
+            }
+          });
+        }
+
+        // Check if resend button should be visible based on session storage
+        const resendVisible = sessionStorage.getItem("otpResendVisible");
+        if (resendVisible === "true") {
+          document.getElementById("resend-container").style.display = "block";
+        }
+      };
+    </script>
     
-window.onload =()=>{ 
-    const resendVisible=sessionStorage.getItem("otpResendVisible")    
-    if(resendVisible==="true"){
-        document.getElementById("resend-container").style.display="block"
-    }else{
-    startTimer()}};
-</script>
-                </form>
-            </div>
-        </div>
-    
-        <script>
-           
-            const inputs = document.querySelectorAll("#otp input");
-    
-          
-            inputs.forEach((input, index) => {
-                input.addEventListener("input", (event) => {
-                    const value = event.target.value;
-                    if (value.length === 1) {
-                        if (index < inputs.length - 1) {
-                            inputs[index + 1].focus(); 
-                        }
-                    }
-                });
-            });
-    
-            const otpForm = document.getElementById("otpForm");
-            otpForm.addEventListener("submit", (event) => {
-               
-                const isFilled = Array.from(inputs).every((input) => input.value.trim() !== "");
-                if (!isFilled) {
-                    event.preventDefault();
-                    
-                }
-            });
-        </script>
-    </div>
-</body>
+  </body>
 </html>

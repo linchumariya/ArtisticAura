@@ -7,17 +7,24 @@
                 <h3>Select Shipping Address</h3>
                 <form action="/checkedout" method="POST">
                     <div class="form-group">
-                        <select name="addressId" class="form-control" required>
-                            <% if (userAddresses.length > 0) { %>
-                                <% userAddresses.forEach((address) => { %>
-                                    <option value="<%= address._id %>">
-                                        <%= address.buildingname %>, <%= address.street %>, <%= address.city %>, <%= address.state %>, <%= address.country %> - <%= address.pincode %>
-                                    </option>
-                                <% }) %>
-                            <% } else { %>
-                                <option disabled>No addresses found. Please add an address.</option>
-                            <% } %>
-                        </select>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <select name="addressId" class="form-control w-75" required>
+                                <% if (userAddresses.length > 0) { %>
+                                    <% userAddresses.forEach((address) => { %>
+                                        <option value="<%= address._id %>">
+                                            <%= address.buildingname %>, <%= address.street %>, <%= address.city %>, <%= address.state %>, <%= address.country %> - <%= address.pincode %>
+                                        </option>
+                                    <% }) %>
+                                <% } else { %>
+                                    <option disabled>No addresses found. Please add an address.</option>
+                                <% } %>
+                            </select>
+
+                            <!-- Add New Address Button -->
+                            <a href="/addaddress" class="btn btn-primary ml-3">
+                                <i class="material-icons md-post_add"></i> Add New Address
+                            </a>
+                        </div>
                     </div>
 
                     <h3>Order Summary</h3>

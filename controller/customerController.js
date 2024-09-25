@@ -69,34 +69,55 @@ const loadcustomermanagement = async (req, res) => {
 }
 
 //list & unlist user-----------------------------------------------------------
-const  blockOrUnblockcustomer= async (req, res) => {
-  try {
-    console.log("i m in unblock")
-      const {id} = req.params;
-      console.log("id",id)
-      const user = await userModel.findOne({ _id: id });
-      console.log("user",user)
+// const  blockOrUnblockcustomer= async (req, res) => {
+//   try {
+//     console.log("i m in unblock")
+//       const {id} = req.params;
+//       console.log("id",id)
+//       const user = await userModel.findOne({ _id: id });
+//       console.log("user",user)
 
-      if (!id || !user) {
+//       if (!id || !user) {
+//           return res.status(400).json({ success: false, message: 'Invalid user ID' });
+//       }
+
+//       if (user.isBlocked === false) {
+//           await userModel.updateOne({ _id: id }, { $set: { isBlocked: true } });
+//           console.log("Blockedflag: 0")
+//           return res.json({ success: true, flag: 0 });
+//       } else { 
+//           await userModel.updateOne({ _id: id }, { $set: { isBlocked : false } });
+//           console.log("Un Blocked,flag: 1")
+
+//           return res.json({ success: true, flag: 1 });
+//       }
+//   } catch (error) {
+//       console.error(error.message);
+//       return res.status(500).json({ success: false, message: 'Internal server error' });
+//   }
+// };
+const blockOrUnblockcustomer = async (req, res) => {
+  try {
+      const { id } = req.params;
+      console.log("iam user id in customer",id);
+      
+      
+      const user = await userModel.findById(id);
+
+      if (!user) {
           return res.status(400).json({ success: false, message: 'Invalid user ID' });
       }
 
-      if (user.isBlocked === false) {
-          await userModel.updateOne({ _id: id }, { $set: { isBlocked: true } });
-          console.log("Blockedflag: 0")
-          return res.json({ success: true, flag: 0 });
-      } else { 
-          await userModel.updateOne({ _id: id }, { $set: { isBlocked : false } });
-          console.log("Un Blocked,flag: 1")
-
-          return res.json({ success: true, flag: 1 });
-      }
+      user.isBlocked = !user.isBlocked; // Toggle the block status
+      await user.save();
+      console.log("iam staus",user.isBlocked);
+      
+      return res.json({ success: true, flag: user.isBlocked ? 1 : 0 });
   } catch (error) {
       console.error(error.message);
       return res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
-
 module.exports={
   loadcustomermanagement,
   blockOrUnblockcustomer,

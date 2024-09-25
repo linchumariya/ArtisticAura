@@ -8,12 +8,13 @@ const addresscontroller=require("../controller/addressController")
 const wishlistController=require('../controller/wishlistController')
 const orderController=require('../controller/orderController')
 const googleMw=require("../middleware/googleAuth")
+const passport = require('passport');
 
 userRoute.get("/register",usercontroller.registerLoad)
 userRoute.post("/postRegister",usercontroller.insertUser)
 userRoute.get('/login',usercontroller.loginLoad)
 userRoute.get('/logout',usercontroller.logoutUser)
-userRoute.post('/login',usercontroller.loginUser)
+userRoute.post('/loginn',usercontroller.loginUser)
 userRoute.get('/otpverify',usercontroller.otpLoad)
 userRoute.post('/otpverify',usercontroller.verifyOtp)
 userRoute.get('/resendOtp',usercontroller.resendOtp)
@@ -23,7 +24,9 @@ userRoute.get('/productdetails/:id',usercontroller.getUserProductDetalis)
 userRoute.get('/auth/google',googleMw.googleAuth);
 userRoute.get('/auth/google/callback',googleMw.googleAuthCallback);
 
-
+userRoute.post("/forgotPassword", usercontroller.forgotPassword);
+userRoute.post("/verifyOtpForPassword", usercontroller.verifyOtpForPassword);
+userRoute.post("/resetPassword", usercontroller.resetPassword);
 
 userRoute.get('/cart',UserMw.userAuth,cartcontroller.getCart);
 userRoute.post('/addtocart/:id',UserMw.userAuth,cartcontroller.postAddCart)

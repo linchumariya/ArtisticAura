@@ -3,9 +3,9 @@ const session = require("express-session");
 const bodyparser = require("body-parser");
 const path = require("path");
 const userRoute = require("./routes/userroutes");
-const passport = require('passport');
+const passport = require("passport");
 
-const dotenv=require('dotenv').config();
+const dotenv = require("dotenv").config();
 
 const app = express();
 const mongoose = require("mongoose");
@@ -29,17 +29,17 @@ app.use(
     secret: "yourSecretKey",
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false },
+    // cookie: { secure: true, httpOnly: true },
   })
 );
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/", userRoute);
 app.use("/", adminRoute);
 
-const PORT=process.env.PORT||3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`server running at http://localhost:${PORT}`);
 });

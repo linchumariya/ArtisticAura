@@ -1,11 +1,23 @@
-
+const User = require('../model/userModel');
 
 module.exports = {
-    userAuth : (req , res, next) =>{
+    userAuth :async (req , res, next) =>{
         if(!req.session.user){
             return res.redirect('/login')
         }
-        next()
+        try {
+         
+            const user = await User.findById(req.session.user._id);
+            if (!user || user.isBlocked) {
+                req.session.user = null; 
+                return res.redirect('/login'); 
+            }
+
+        next();
+    } catch (error) {
+        console.error("Error in userAuth middleware:", error);
+        return res.redirect('/login');
+    }
     },
     adminAuth : (req ,res , next) =>{
         if(!req.session.admin){

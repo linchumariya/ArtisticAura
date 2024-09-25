@@ -2,11 +2,12 @@ const mongoose=require("mongoose")
 const userSchem=new mongoose.Schema({
     name:{
         type:String,
-       
+        required: true,
     },
     email:{
         type:String,
-        
+        required: true,
+        unique: true,
     },
     phone:{
         type:String,
@@ -18,7 +19,7 @@ const userSchem=new mongoose.Schema({
       },
     
         otp:{
-          type:Number,
+          type:String,
           default:null,
           created:Date,
           expires:"5m"
@@ -27,6 +28,8 @@ const userSchem=new mongoose.Schema({
         isBlocked:{
           type:Boolean,
           default:false
+      }, googleId: {
+        type: String
       },
         
       created:{

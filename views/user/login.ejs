@@ -15,6 +15,10 @@
     <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/favicon.svg">
     <!-- Template CSS -->
     <link rel="stylesheet" href="assets/css/main.css?v=3.4">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 </head>
 
 <body>
@@ -30,7 +34,7 @@
                                         <div class="heading_s1">
                                             <h3 class="mb-30">Login</h3>
                                         </div>
-                                        <form method="post" action="/login">
+                                        <form method="post" action="/loginn">
                                             <div class="form-group">
                                                 <input type="text" required="" name="email" placeholder="Your Email">
                                             </div>
@@ -43,15 +47,104 @@
                                                         <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="">
                                                         <label class="form-check-label" for="exampleCheckbox1"><span>Remember me</span></label>
                                                     </div>
-                                                </div>
-                                                <a class="text-muted" href="#">Forgot password?</a>
-                                            </div>
-                                            
                                             <div class="form-group">
                                                 <button type="submit" class="btn btn-fill-out btn-block hover-up" name="login">Log in</button>
                                             </div>
                                             <div class="text-muted text-center">Dont have an account? <a href="/register">Sign up now</a></div>
                                         </div>
+                                    </form>
+                                        <div class="text-center">
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">Forgot Password?</a>
+                                        </div><!-- Forgot Password Modal -->
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="forgotPasswordForm" action="/forgotPassword" method="POST">
+          <div class="modal-header">
+            <h5 class="modal-title" id="forgotPasswordLabel">Forgot Password</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="email" class="form-label">Enter your registered email</label>
+              <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Send OTP</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- OTP Verification Modal -->
+  <div class="modal fade" id="otpModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="otpForm" action="/verifyOtpForPassword" method="POST">
+          <div class="modal-header">
+            <h5 class="modal-title" id="otpModalLabel">Verify OTP</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="otp" class="form-label">Enter OTP sent to your email</label>
+              <input type="hidden" name="email" id="otpEmail">
+              <input type="text" class="form-control" id="otp" name="otp" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Verify OTP</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Reset Password Modal -->
+  <div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="resetPasswordLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="resetPasswordForm" action="/resetPassword" method="POST">
+          <div class="modal-header">
+            <h5 class="modal-title" id="resetPasswordLabel">Reset Password</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" name="email" id="resetEmail">
+            <div class="mb-3">
+              <label for="newPassword" class="form-label">New Password</label>
+              <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+            </div>
+            <div class="mb-3">
+              <label for="confirmPassword" class="form-label">Confirm Password</label>
+              <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Reset Password</button>
+          </div>
+       
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Script to handle modals based on backend responses
+    function openOtpModal(email) {
+      document.getElementById('otpEmail').value = email;
+      var otpModal = new bootstrap.Modal(document.getElementById('otpModal'));
+      otpModal.show();
+    }
+  
+    function openResetPasswordModal(email) {
+      document.getElementById('resetEmail').value = email;
+      var resetPasswordModal = new bootstrap.Modal(document.getElementById('resetPasswordModal'));
+      resetPasswordModal.show();
+    }
+  </script>
+  
                                     </div>
                                 </div>
                             </div>   
@@ -99,6 +192,149 @@
     <script src="assets/js/plugins/jquery.theia.sticky.js"></script>
     <!-- Template  JS -->
     <script src="./assets/js/main.js?v=3.4"></script>
+    <script>
+        
+        document.getElementById('forgotPasswordForm').addEventListener('submit', function(event) {
+          event.preventDefault(); 
+          
+          const email = document.getElementById('email').value;
+      
+          fetch('/forgotPassword', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+                Swal.fire({
+          icon: 'success',
+          title: 'OTP Sent!',
+          text: 'Please check your email for the OTP.',
+          confirmButtonText: 'OK'
+        }).then(() => {
+        
+          openOtpModal(email);
+        });
+            } else {
+                Swal.fire({
+          icon: 'error',
+          title: 'Failed',
+          text: 'Failed to send OTP. Please try again.',
+          confirmButtonText: 'OK'
+        });
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An error occurred. Please try again later.',
+        confirmButtonText: 'OK'
+      });
+          });
+        });
+      </script>
+<script>
+    
+    document.getElementById('otpForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      
+      const email = document.getElementById('otpEmail').value;
+      const otp = document.getElementById('otp').value;
+  
+      fetch('/verifyOtpForPassword', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, otp })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+            Swal.fire({
+          icon: 'success',
+          title: 'OTP Verified!',
+          text: 'You can now reset your password.',
+          confirmButtonText: 'OK'
+        }).then(() => {
+          
+          openResetPasswordModal(email);
+        });
+        } else {
+            Swal.fire({
+          icon: 'error',
+          title: 'Invalid OTP',
+          text: data.message ||'Please enter the correct OTP and try again.',
+          confirmButtonText: 'OK'
+        });
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An error occurred while verifying the OTP. Please try again later.',
+        confirmButtonText: 'OK'
+      });
+      });
+    });
+  </script>
+<script>
+    
+    document.getElementById('resetPasswordForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      
+      const email = document.getElementById('resetEmail').value;
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+  
+      if (newPassword !== confirmPassword) {
+        Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Passwords do not match. Please try again.',
+            });
+        return;
+      }
+  
+      fetch('/resetPassword', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, newPassword ,confirmPassword})
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+            Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: data.message, 
+                }).then(() => {
+                 
+                    window.location.href = '/login'; 
+                }); 
+        } else {
+            Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: data.message || 'Password reset failed. Please try again.',
+                });
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An error occurred while verifying the OTP. Please try again later.',
+        confirmButtonText: 'OK'
+      });
+      });
+    });
+  </script>
+          
 </body>
 
 </html>

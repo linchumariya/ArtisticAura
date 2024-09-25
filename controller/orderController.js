@@ -48,7 +48,7 @@ const postCheckout = async (req, res) => {
         if (!userCart || !billingAddress || userCart.items.length === 0) {
             return res.status(400).json({ success: false, message: 'Invalid order details' });
         }
-
+        const user = req.session.user;
         const newOrder = new orderModel({
             userId:userId,
             items: userCart.items.map(item => ({
@@ -57,7 +57,18 @@ const postCheckout = async (req, res) => {
                 quantity: item.quantity
             })),
             totalPrice: userCart.totalPrice,
-            billingdetails: billingAddress,
+            billingdetails:{
+
+                name: user.name,
+                buildingname: billingAddress.buildingname,
+                street: billingAddress.street || '', // Handle case if street is optional
+                city: billingAddress.city,
+                state: billingAddress.state,
+                country: billingAddress.country,
+                postalCode: billingAddress.postalCode,
+                phone: user.phone,
+                email: user.email,
+            },
             paymentMethod
         });
 

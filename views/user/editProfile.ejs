@@ -1,27 +1,51 @@
 <%- include ('../partials/userheader') %>
 <main>
-<section class="pt-150 pb-150">
+    <div class="page-header breadcrumb-wrap">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="/profile" rel="nofollow">My Profile</a> 
+                <span></span> Account details
+            </div>
+        </div>
+    </div>
+<section class="pt-50 pb-50">
     <div class="container">
         <div class="row">
             <div class="col-lg-10 m-auto">
                 <div class="row">
+                    <div class="col-md-4">
+                        <div class="dashboard-menu">
+                            <ul class="nav flex-column" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/profile"><i class="fi-rs-dashboard mr-10"></i>Dashboard</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/myorder" ><i class="fi-rs-shopping-bag mr-10"></i>Orders</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link"  href="/addressview" ><i class="fi-rs-marker mr-10"></i>My Address</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="/editProfile" ><i class="fi-rs-user mr-10"></i>Account details</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
                         <div class="tab-content dashboard-content">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5>Profile Details And Edit Profile</h5>
-                                </div>
-                                <div class="card-body">
+                            <div class="tab-pane fade active show" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+                                <div class="card">
+                                        <div class="card-header">
+                                            <h5>Profile Details And Edit Profile</h5>
+                                        </div>
+                                    <div class="card-body">
                                     <form action="/editedprofile" method="post" onsubmit="return validateForm()" name="registrationForm">
                                         <div class="mb-3">
                                             <label class="form-label">Enter your name</label>
                                             <input class="form-control" placeholder="Your name" type="text" value="<%= users.name %>" name="name" >
                                             <span id="name-error" style="font-size: 14px; margin-top: -20px; color: red;"></span>
                                         </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Email</label>
-                                            <input class="form-control" placeholder="Your email" value="<%= users.email %>" type="email" name="email" >
-                                            <span id="email-error" style="font-size: 14px; margin-top: -20px; color: red;"></span>
-                                        </div> 
+                                        
                                         <div class="mb-3">
                                             <label class="form-label">Phone</label>
                                             <div class="row gx-2">
@@ -33,21 +57,7 @@
                                             <button type="submit" class="btn btn-primary w-100"> Save </button>
                                         </div> 
                                     </form>
-                                </div>
-                            </div>
-                        </div>
-                </div>
-            </div>
-        </div>
-    </div>
-<!-- Reset Password--------------------------------------------- -->
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-10 m-auto">
-                <div class="row">
-                    <div class="tab-content dashboard-content">
-                        <div class="card-body">
-                            <h4 class="card-title mb-4">Reset Password</h4>
+                                    <h4 class="card-title mb-4">Reset Password</h4>
                            
                                 <form id="resetPasswordForm" action="/changepassword" method="post" onsubmit="return validatePassword()">
                                     <div class="mb-3">
@@ -64,7 +74,9 @@
                                         <button type="submit" class="btn btn-primary w-100">Reset Password</button>
                                     </div>
                                 </form>
-                        </div>  
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

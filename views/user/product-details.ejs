@@ -7,6 +7,12 @@
             font-weight: 400;
             text-decoration: line-through;
         }
+        .related-products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Adjust the minmax for product width */
+        gap: 20px;
+    }
+
         </style>
 </head>
 <body>
@@ -125,8 +131,8 @@
                 <div class="col-12">
                     <h3 class="section-title style-1 mb-30">Related products</h3>
                 </div>
-                <div class="col-3">
-                    <div class="related-products-slider">
+                <div class="col-12">
+                    <div class="related-products-grid">
                         <% doc.forEach((rel, index) => { %>
                         <div class="product-cart-wrap small hover-up">
                             <div class="product-img-action-wrap">
@@ -138,7 +144,7 @@
                                 </div>
                                 <div class="product-action-1">
                                     <a aria-label="Quick view" class="action-btn small hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="fi-rs-search"></i></a>
-                                    <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addToWishlist('<%= rel._id %>')"><i class="fi-rs-heart"></i></a>
+                                    <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addToWishlist('<%= rel._id %>','<%= user ? user._id : null %>')"><i class="fi-rs-heart"></i></a>
                                 </div>
                             </div>
                             <div class="product-content-wrap">
@@ -165,8 +171,7 @@
     
     function addToCart(productId,user) {
        
-        console.log(productId)
-        console.log(user)
+    
       if (user) { 
         console.log("user",user )
          fetch(`/addtocart/${productId}`, {
@@ -182,6 +187,8 @@
              return response.json();
          })
          .then(data => {
+            console.log(data);
+            
             if (data.success) {
                 Swal.fire({
                     title: 'Added to Cart',

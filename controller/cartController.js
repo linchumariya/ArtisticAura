@@ -26,8 +26,8 @@ const postAddCart=async (req,res)=>{
         const quantity=1;
         const userId=req.session.user._id;
         const productdata=await productModel.findById(productId);
-        if(!productdata||productModel.stock===0){
-            return res.status(400).json({sucess:false,message:"product out of stock"});
+        if(!productdata||productdata.stock===0){
+            return res.status(400).json({success:false,message:"product out of stock"});
         }
         let userCart=await cartModel.findOne({userId:userId})
         if(!userCart){
@@ -41,13 +41,14 @@ const postAddCart=async (req,res)=>{
                 totalPrice:productdata.price*quantity,
             });
             await newCart.save();
+            console.log("iam eroor",newCart)
             await productModel.findByIdAndUpdate(productId,{$inc:{stock:-quantity}})
-        return res.status(200).json({sucess:true,message:"Items added sucessfully"})
+        return res.status(200).json({success:true,message:"Items added sucessfully"})
 
         }else{
            const existingProductIndex=userCart.items.findIndex(item=>item.product.toString()===productId.toString());
            if(existingProductIndex!==-1){
-            return res.status(200).json({sucess:true,message:"Item exist in the cart"})
+            return res.status(200).json({success:true,message:"Item exist in the cart"})
            }else{
                 userCart.items.push({
                     product:productId,
