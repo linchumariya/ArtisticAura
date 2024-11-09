@@ -19,6 +19,8 @@ userRoute.get('/otpverify',usercontroller.otpLoad)
 userRoute.post('/otpverify',usercontroller.verifyOtp)
 userRoute.get('/resendOtp',usercontroller.resendOtp)
 userRoute.get('/',usercontroller.loadHome)
+userRoute.get('/about',usercontroller.getAbout)
+
 userRoute.get('/productdetails/:id',usercontroller.getUserProductDetalis)
 
 userRoute.get('/auth/google',googleMw.googleAuth);
@@ -27,6 +29,10 @@ userRoute.get('/auth/google/callback',googleMw.googleAuthCallback);
 userRoute.post("/forgotPassword", usercontroller.forgotPassword);
 userRoute.post("/verifyOtpForPassword", usercontroller.verifyOtpForPassword);
 userRoute.post("/resetPassword", usercontroller.resetPassword);
+
+userRoute.get("/wallet",UserMw.userAuth, usercontroller.getWallet);
+userRoute.post("/walletdeposite",UserMw.userAuth, usercontroller.postAmount);
+
 
 userRoute.get('/cart',UserMw.userAuth,cartcontroller.getCart);
 userRoute.post('/addtocart/:id',UserMw.userAuth,cartcontroller.postAddCart)
@@ -44,8 +50,16 @@ userRoute.get('/removewishlist/:Id',UserMw.userAuth,wishlistController.deleteWis
 
 userRoute.get('/checkout',UserMw.userAuth,orderController.getCheckout)
 userRoute.post('/checkedout',UserMw.userAuth,orderController.postCheckout)
-userRoute.get('/myorder',UserMw.userAuth,orderController.getMyOrder)
+userRoute.get('/thankyou',UserMw.userAuth,orderController.getConfirmOrder);
+// userRoute.post('/validateCoupon',UserMw.userAuth,orderController.checkCoupon);
+userRoute.post('/applyCoupon',UserMw.userAuth,orderController.applyCoupon);
 
+userRoute.get('/myorder',UserMw.userAuth,orderController.getMyOrder)
+userRoute.get('/myorderDetails/:id',UserMw.userAuth,orderController.getOrderDetails)
+userRoute.patch('/cancelOrder',UserMw.userAuth,orderController.cancelOrder)
+userRoute.patch('/returnOrder',UserMw.userAuth,orderController.returnOrder)
+userRoute.get('/download-invoice/:orderId',UserMw.userAuth,orderController.downloadInvoice)
+userRoute.post('/updateOrderStatus',UserMw.userAuth,orderController.retryPayment)
 //address
 
 userRoute.get('/addressview',UserMw.userAuth, addresscontroller.getAddress);

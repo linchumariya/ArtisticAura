@@ -44,20 +44,31 @@
                     <thead>
                         <tr>
                             <th>Date</th>
-                            <th>Payment Method </th>
+                            <th>Tracking ID</th>
+                            <th>Payment Status </th>
                             <th >No of Items</th> 
-                            <th >Order Status</th>
                             <th>Total</th>
+                            <th>Actions</th>
                       
                     </thead>
                     <tbody>
                          <% data.forEach((row) => { %>
                                 <tr>
                                     <td><%= row.orderDate %></td>
-                                    <td><%= row.paymentMethod %></td>
+                                    <td><%= row.trackingId %></td>
+                                    <td><%= row.paymentStatus %></td>
                                     <td><%= row.items.length %></td>
-                                    <td><%= row.orderStatus %></td>
-                                    <td>Rs. <%= row.totalPrice %></td> 
+                                    
+                                    <td>Rs. <%= row.totalPrice-row.discountAmount %></td> 
+                                    <% if (row.paymentStatus=='Failed') { %>
+                                        <td>
+                                            <button class="retryPaymentBtn btn btn-small d-block" style="background-color: orange;" data-order-id="<%= row._id %>" data-amount="<%= row.totalPrice - row.discountAmount %>">Retry Payment</button>
+
+                                        </td>
+                                        <%  } else {  %>
+                                            <th><a href="/myorderDetails/<%= row._id %>" class="btn btn-small d-block" >More Info</a></th>
+                                            <% } %> 
+                        
                                 </tr>
                                      <% } ) %>
                              </tbody>
@@ -69,4 +80,90 @@
     </div> 
 </section> 
 </main>
+
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+document.querySelectorAll('.retryPaymentBtn').forEach(button => {
+    button.addEventListener('click', () => {
+        const orderId = button.getAttribute('data-order-id');
+        const amount = parseFloat(button.getAttribute('data-amount'));
+        initiateRazorpayPayment(orderId, amount);
+    });
+});
+       
+                function initiateRazorpayPayment(orderId, amount) {
+                    const user = {
+                        name: "<%= userData.name %>",
+                        email: "<%= userData.email %>",
+                        phone: "<%= userData.phone %>",
+                       
+                    };
+                     const rzp_key = '<%= process.env.RAZORPAY_KEY_ID %>';
+                     
+    
+        //alert(order.amount)
+    
+        var options = {
+        "key": rzp_key, 
+        "amount": amount * 100,
+        "currency": "INR",
+        "name": "Artistic Aura", 
+        "description": "Artistic Aura Payment System",
+        "image": "/assets/imgs/theme/artisticAura.png",
+       
+        handler: function (response) {
+                            console.log(response);
+                            if (response.razorpay_payment_id) {
+                                // Payment successful
+                                updateOrderStatus(amount,orderId, 'Success');
+                                    setTimeout(() => {
+                                        location.reload();
+                                    }, 1000);
+                            } else {
+                                // Payment failed
+                                updateOrderStatus(amount,orderId, 'Fail');
+                            }
+                        },
+            
+                        prefill: {
+                            name: user.name,
+                            email: user.email,
+                            contact: user.phone,
+                        },
+                        theme: {
+                            color: "#3399cc",
+                        },
+                    };
+            
+                    var rzp = new Razorpay(options);
+                    rzp.open();
+                    
+                    // Prevent default form submission
+                    return false;
+                }
+            
+                function updateOrderStatus(amount,orderId) {
+                    fetch('/updateOrderStatus', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ 
+                            amount: amount,
+                            orderId:orderId
+                        })
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            console.log("OrderStatus updated successfully");
+                        } else {
+                            console.error("Failed to update OrderStatus");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error updating OrderStatus", error);
+                    });
+                }
+    </script>
 <%- include('../partials/userfooter') %>

@@ -61,12 +61,7 @@
                                         <div class="pro-details-brand">
                                             <span> Category: <a><%= data.category.name %></a></span>
                                         </div>
-                                        <div class="product-rate-cover text-end">
-                                            <div class="product-rate d-inline-block">
-                                                <div class="product-rating" style="width:90%"></div>
-                                            </div>
-                                            <span class="font-small ml-5 text-muted"> (25 reviews)</span>
-                                        </div>
+                                        
                                     </div>
                                     <div class="clearfix product-price-cover">
                                         <div class="product-price primary-color float-left">
@@ -149,9 +144,7 @@
                             </div>
                             <div class="product-content-wrap">
                                 <h2><a href="" tabindex="0"><%= rel.productName %></a></h2>
-                                <div class="rating-result" title="90%">
-                                    <span></span>
-                                </div>
+                                
                                 <div class="product-price">
                                     <span class="old-price">₹<%= rel.oldPrice %></span><br>
                                     <span class="discounted-price">₹<%= rel.price %></span>
@@ -218,7 +211,9 @@
                 text: 'There was an error adding the product to your cart.',
                 icon: 'error',
                 confirmButtonColor: '#dc3545'
-         });
+         }).then(() => {
+                window.location.href = '/login'; 
+            });
         });
       }else { 
         // 
@@ -267,6 +262,8 @@ async function addToWishlist(productId,user) {
                 text: 'There was an error adding the product to your wishlist.',
                 icon: 'error',
                 confirmButtonColor: '#dc3545'
+            }).then(() => {
+                window.location.href = '/login'; 
             });
         }
     }}
@@ -284,5 +281,4 @@ async function addToWishlist(productId,user) {
 }
 
  </script>
- 
-<%- include ('../partials/userfooter.ejs') %>
+<%- include ('../partials/userfooter') %>

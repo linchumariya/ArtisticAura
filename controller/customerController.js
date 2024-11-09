@@ -1,22 +1,16 @@
 const userModel=require("../model/userModel")
 const paginationHelper=require('../helper/paginationHelper')
+const STATUS_CODES=require("../helper/statusCode")
 
-//customer or user page mangement--------------------------------------------
 const loadcustomermanagement = async (req, res) => {
   try {
-    console.log("load customermanagement")
-
     let { sortData,sortOrder } = req.query;
     const { search = '' } = req.query;
     const limit = 10;
-
-    // console.log(req.query)
-
     let page = Number(req.query.page);
     if (isNaN(page) || page < 1) {                                  
         page = 1;
     }
-
     if(!sortData)
     {  
       sortData = "name"
@@ -25,14 +19,8 @@ const loadcustomermanagement = async (req, res) => {
     sort[sortData] =1
 
     if (sortData) {
-        if (sortOrder === 'asc') {
-            sort[sortData] = 1;
-        } else {
-            sort[sortData] = -1;
-        }
-    }
-
-    // search criteria
+      sort[sortData] = (sortOrder === 'asc') ? 1 : -1;
+  }
     const searchCriteria = {};
     if (search) {
         searchCriteria.$or = [
@@ -47,9 +35,7 @@ const loadcustomermanagement = async (req, res) => {
     .limit(limit); 
 
     const usersCount = await userModel.countDocuments(searchCriteria);  
-
-    console.log(usersCount,page,paginationHelper.USERS_PER_PAGE)
-    res.render("admin/customer-list",{
+    res.status(STATUS_CODES.OK).render("admin/customer-list",{
           data:filteredData,
           currentPage : page,
           hasNextPage : usersCount  >  page * paginationHelper.USERS_PER_PAGE,
@@ -63,59 +49,28 @@ const loadcustomermanagement = async (req, res) => {
     );
 
   } catch (error) {
-    // console.log("Error in customer management:", error);
-    res.status(500).send("Internal Server Error");
+    console.error("Error in customer management:", error);
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send("Internal Server Error");
   }
 }
 
-//list & unlist user-----------------------------------------------------------
-// const  blockOrUnblockcustomer= async (req, res) => {
-//   try {
-//     console.log("i m in unblock")
-//       const {id} = req.params;
-//       console.log("id",id)
-//       const user = await userModel.findOne({ _id: id });
-//       console.log("user",user)
-
-//       if (!id || !user) {
-//           return res.status(400).json({ success: false, message: 'Invalid user ID' });
-//       }
-
-//       if (user.isBlocked === false) {
-//           await userModel.updateOne({ _id: id }, { $set: { isBlocked: true } });
-//           console.log("Blockedflag: 0")
-//           return res.json({ success: true, flag: 0 });
-//       } else { 
-//           await userModel.updateOne({ _id: id }, { $set: { isBlocked : false } });
-//           console.log("Un Blocked,flag: 1")
-
-//           return res.json({ success: true, flag: 1 });
-//       }
-//   } catch (error) {
-//       console.error(error.message);
-//       return res.status(500).json({ success: false, message: 'Internal server error' });
-//   }
-// };
 const blockOrUnblockcustomer = async (req, res) => {
   try {
       const { id } = req.params;
-      console.log("iam user id in customer",id);
-      
-      
       const user = await userModel.findById(id);
 
       if (!user) {
-          return res.status(400).json({ success: false, message: 'Invalid user ID' });
+        return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: 'Invalid user ID' });
       }
 
-      user.isBlocked = !user.isBlocked; // Toggle the block status
+      user.isBlocked = !user.isBlocked;
       await user.save();
       console.log("iam staus",user.isBlocked);
       
-      return res.json({ success: true, flag: user.isBlocked ? 1 : 0 });
+      return res.status(STATUS_CODES.OK).json({ success: true, flag: user.isBlocked ? 1 : 0 });
   } catch (error) {
-      console.error(error.message);
-      return res.status(500).json({ success: false, message: 'Internal server error' });
+    console.error("Error blocking/unblocking customer:", error.message);
+    return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: 'Internal server error' });
   }
 };
 module.exports={

@@ -1,19 +1,19 @@
 <%- include("../partials/userheader.ejs") %>
 <style>
     #hideOutOfStockCheckbox {
-        width: 20px; /* Adjust the size */
-        height: 20px; /* Adjust the size */
+        width: 20px; 
+        height: 20px; 
     }
     
     
     .product-cart-wrap {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    /* height: 100%; */
     justify-content: space-between;
     border: 1px solid #e0e0e0;
-    padding: 15px;
-    margin-bottom: 20px;
+    padding: 10px;
+    margin-bottom: 15px;
 }
 
 .product-img-action-wrap {
@@ -25,7 +25,7 @@
 }
 
 .product-img-zoom img {
-    max-height: 200px; /* Set a maximum height for the images */
+    max-height: 150px;
     width: auto;
     margin: 0 auto;
     display: block;
@@ -34,14 +34,91 @@
 .product-content-wrap {
     flex-grow: 1;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: space-between; 
+    margin-bottom: 5px;
 }
 
-.product-price {
+.discount-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #088178;
+    color: #fff; 
     font-weight: bold;
-    margin-top: 10px;
+    border-radius: 5px; 
+    font-size: 14px; 
+    text-align: center;
+}
+.tab-content .tab-pane:not(.show) {
+    display: none;
+    
+}
+
+.product-grid-4 {
+    gap: 20px; 
+}
+.product-price {
+    margin-bottom: 10px; 
+}
+
+.product-action-1 {
+    display: flex;
+    justify-content: center;
+    margin-top: 5px;
+    width: 25px;
+    height: 10px; 
+}
+.product-action-1 .action-btn {
+    font-size: 1rem;
+    padding: 0px;
+   
+}
+.product-price {
+    display: flex;
+    align-items: baseline;
+}
+
+.product-price-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.price {
+    margin-bottom: 5px;
+}
+
+.old-price {
+    margin-top: 5px;
+}
+.nav-tabs .nav-link.active {
+    color: #333;
+    background-color: #08817899;
 }
 </style>
 <script>
+    document.querySelectorAll('.category-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const categoryId = this.dataset.cat;
+            const search = document.getElementById('searchInput').value;
+            
+            
+            window.location.href = `/?cat=${categoryId}&search=${search}`;
+        });
+    });
+
+    document.getElementById('searchForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const search = document.getElementById('searchInput').value;
+        const categoryId = new URLSearchParams(window.location.search).get('cat');
+        
+       
+        window.location.href = `/?cat=${categoryId || 'ALL'}&search=${search}`;
+    });
 
     function toggleOutOfStock() {
         var hideOutOfStock = document.getElementById("hideOutOfStockCheckbox").checked;
@@ -101,6 +178,54 @@ if (user) {
          }
 }
 </script>
+<script>
+    function updateSort(sortType) {
+  const urlParams = new URLSearchParams(window.location.search);
+  urlParams.set('sort', sortType); 
+  window.location.search = urlParams.toString(); 
+}
+document.querySelector("#sortPriceLowToHigh").onclick = () => updateSort("price_low_to_high");
+document.querySelector("#sortPriceHighToLow").onclick = () => updateSort("price_high_to_low");
+document.querySelector("#sortNameaToz").onclick = () => updateSort("name_aA_to_zZ");
+document.querySelector("#sortNamezToa").onclick = () => updateSort("name_zZ_to_aA");
+</script>
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+    const tabs = document.querySelectorAll('.nav-tabs button');
+    const tabContentContainer = document.querySelector('.tab-content');
+
+    if (tabContentContainer) {
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function(event) {
+                event.preventDefault();
+
+                
+                tabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+
+                
+                const tabContents = tabContentContainer.querySelectorAll('.tab-pane');
+                tabContents.forEach(content => content.classList.remove('show', 'active'));
+
+                
+                const targetContentId = this.getAttribute('data-bs-target');
+                const targetContent = tabContentContainer.querySelector(targetContentId);
+
+                if (targetContent) {
+                    targetContent.classList.add('show', 'active');
+                } else {
+                    console.error(`Element with ID ${targetContentId} not found.`);
+                }
+            });
+        });
+    } else {
+        console.error(`.tab-content container not found.`);
+    }
+});
+
+
+</script>
 <main class="main">
        
         <section class="product-tabs pt-25 pb-20 wow fadeIn animated">
@@ -126,11 +251,12 @@ if (user) {
                         <div class="widget-category mb-30">
                             <h5 class="section-title style-1 mb-30 wow fadeIn animated">Sort by</h5>
                             <ul class="categories">
+                                <% const currentParams = new URLSearchParams(query); %>
                             
-                                <li><a href="?sort=price_aA_to_zZ">Price: Low to High</a></li>
-                                <li><a href="?sort=price_Aa_to_Zz">Price: High to Low</a></li>
-                                <li><a href="?sort=name_aA_to_zZ">Name: aA_to_zZ</a></li>
-                                <li><a href="?sort=name_Aa_to_Zz">Name: Aa_to_Zz</a></li>
+                                <li><a href="?<%= currentParams.toString() %>&sort=price_low_to_high">Price: Low to High</a></li>
+                                <li><a href="?<%= currentParams.toString() %>&sort=price_high_to_low">Price: High to Low</a></li>
+                                <li><a href="?<%= currentParams.toString() %>&sort=name_aA_to_zZ">Name: aA_to_zZ</a></li>
+                                <li><a href="?<%= currentParams.toString() %>&sort=name_zZ_to_aA">Name: zZ_to_aA</a></li>
                                 <!-- <li><a href="">Name: High to Low</a></li> -->
                             </ul>
 
@@ -152,8 +278,9 @@ if (user) {
                                 </li>
                             
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="nav-tab-three" data-bs-toggle="tab" data-bs-target="#tab-three" type="button" role="tab" aria-controls="tab-three" aria-selected="false">New added</button>
+                                    <button class="nav-link" id="nav-tab-two" data-bs-toggle="tab" data-bs-target="#tab-two" type="button" role="tab" aria-controls="tab-two" aria-selected="false">New added</button>
                                 </li>
+                             
                             </ul>
                             
                         </div>
@@ -187,34 +314,123 @@ if (user) {
                                             <div class="product-content-wrap">
                                                
                                                 <h2>
-                                                    <a href="productdetials/<%= row._id %>">
+                                                    <a href="/productdetails/<%= row._id %>" >
                                                         <%= row.productName %>
                                                     </a>
                                                 </h2>
                                                 
-                                                <div class="rating-result" title="90%">
-                                                    <span>
-                                                        <span><%= parseInt(Math.floor(((row.oldPrice - row.price)/row.oldPrice)*100)) %>%</span>
-                                                        
-                                                    </span>
+                                                <div class="discount-badge" title="Discount">
+                                                    <span><%= parseInt(Math.floor(((row.oldPrice - row.price) / row.oldPrice) * 100)) %>%</span>
                                                 </div>
                                                 <div class="product-price">
-                                                    <span class="price">Rs. <%= row.price %> </span>
-                                                    <span class="old-price"> Rs. <%= row.oldPrice %></span>
+                                                    <div class="product-price-container">
+                                                    <span class="price">Rs.<%= row.price %> </span>
+                                                    <span class="old-price">Rs.<%= row.oldPrice %></span>
                                                 </div>
                                             </div>
-                                           
-                                        </div>
+                                        </div>      
                                     </div>
+                                </div>
                                 <% }) %>
+                            </div>
+                            </div>
 
-                                  
-                                <!--End product-grid-4-->
+                            <div class="tab-pane fade" id="tab-two" role="tabpanel" aria-labelledby="tab-two">
+                                    <div class="row product-grid-4">
+                                        <% newproducts.forEach((row, index) => { %>
+                                            <% if (!row.isBlocked && row.category.islisted) { %>
+                                                <div class="col-lg-3 col-md-3 col-12 col-sm-6">
+                                                <div class="product-cart-wrap mb-30">
+                                                    <div class="product-img-action-wrap">
+                                                        <div class="product-img product-img-zoom">
+                                                            <a href="productdetails/<%= row._id %>">
+                                                                <img class="default-img" src="/product_images/<%= row.image[0] %>" alt="<%= row.productName %>">
+                                                                <img class="hover-img" src="/product_images/<%= row.image[1] %>" alt="">
+                                                            </a>
+                                                        </div>
+                                                       
+                                                        <div class="product-badges product-badges-position product-badges-mrg">
+                                                            <span class="hot">(<%= row.stock %> Left)</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="product-content-wrap">
+                                                        <div class="product-category">
+                                                            <a href="productdetails/<%= row._id %>"><%= row.category.name %></a>
+                                                        </div>
+                                                        <h2><a href="productdetails/<%= row._id %>"><%= row.productName %></a></h2>
+                                                        <div class="discount-badge" title="Discount">
+                                                            <span><%= parseInt(Math.floor(((row.oldPrice - row.price) / row.oldPrice) * 100)) %>%</span>
+                                                        </div>
+                                                        <div class="product-price">
+                                                            <span>₹<%= row.price %></span>
+                                                            <span class="old-price"><%= row.oldPrice ? `₹${row.oldPrice}` : '' %></span>
+                                                            
+                                                        </div>
+                                                         <!-- <div class="product-action-1">
+                                                            <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
+                                                        </div> -->
+                                                        <div class="product-action-1 show">
+                                                            <button onclick="addToWishlist('<%= row._id %>')" class="action-btn hover-up"><i class="fi-rs-heart"></i></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            <% } %>
+                                        <% }); %>
+                                    </div>  
+                                </div>
+                               <!--End product-grid-4-->
                             </div>
                             <!--En tab one (Featured)-->
     
                         </div>
                         <!--End tab-content-->
+                        <div class="pagination-area mt-15 mb-50">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-center">
+                                    <% if (currentPage > 1) { %>
+                                        <li class="page-item">
+                                            <a class="page-link pagination-link" href="?page=<%= prevPage %>" data-page="<%= prevPage %>">
+                                                <i class="material-icons md-chevron_left"></i>
+                                            </a>
+                                        </li>
+                                    <% } %>
+                                    <% if (currentPage > 2) { %>
+                                        <li class="page-item">
+                                            <a class="page-link pagination-link" href="?page=1" data-page="1">1</a>
+                                        </li>
+                                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                                    <% } %>
+                                    <% if (currentPage > 1) { %>
+                                        <li class="page-item">
+                                            <a class="page-link pagination-link" href="?page=<%= currentPage - 1 %>" data-page="<%= currentPage - 1 %>"><%= currentPage - 1 %></a>
+                                        </li>
+                                    <% } %>
+                                    <li class="page-item active">
+                                        <span class="page-link"><%= currentPage %></span>
+                                    </li>
+                                    <% if (hasNextPage) { %>
+                                        <li class="page-item">
+                                            <a class="page-link pagination-link" href="?page=<%= currentPage + 1 %>" data-page="<%= currentPage + 1 %>"><%= currentPage + 1 %></a>
+                                        </li>
+                                    <% } %>
+                                    <% if (nextPage !== lastPage && currentPage !== lastPage) { %>
+                                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                                        <li class="page-item">
+                                            <a class="page-link pagination-link" href="?page=<%= lastPage %>" data-page="<%= lastPage %>"><%= lastPage %></a>
+                                        </li>
+                                    <% } %>
+                                    <% if (currentPage !== lastPage) { %>
+                                        <li class="page-item">
+                                            <a class="page-link pagination-link" href="?page=<%= nextPage %>" data-page="<%= nextPage %>">
+                                                <i class="material-icons md-chevron_right"></i>
+                                            </a>
+                                        </li>
+                                    <% } %>
+                                </ul>
+                            </nav>
+                        </div>
+                        <!-- Pagination Section End -->
                     </div>
                 </div>
             </div>

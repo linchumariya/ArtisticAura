@@ -5,7 +5,6 @@
         <div class="container">
             <div class="breadcrumb">
                 <a href="/" rel="nofollow">My Profile</a>
-              
                 <span></span> Add New Address
             </div>
         </div>
@@ -15,52 +14,148 @@
             <div class="row">
                 <div class="col-lg-10 m-auto">
                     <div class="row">
-                            <div class="tab-content dashboard-content">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5>Add New Address</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <form method="post" name="address-form" action="" >
-                                            <div class="row">
-                                                <span id="validation-error" style="font-size: 14px; margin-top: -20px; color: black;"><b></b></span>
-                                                <div class="form-group col-md-12">
-                                                    <label> Building Name <span class="required">*</span></label>
-                                                    <input required="" class="form-control square" name="buildingname" id="buildingname" type="text">
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <label>Pincode <span class="required">*</span></label>
-                                                    <input required="" class="form-control square" name="pincode" id="pincode" type="text">
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <label>Street <span class="required">*</span></label>
-                                                    <input required="" class="form-control square" name="city" id="city">
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <label>City <span class="required">*</span></label>
-                                                    <input required="" class="form-control square" name="street" id="street">
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <label>State <span class="required">*</span></label>
-                                                    <input required="" class="form-control square" name="state" id="state">
-                                                </div>
-                                                <div class="form-group col-md-12">
-                                                    <label>Country <span class="required">*</span></label>
-                                                    <input required="" class="form-control square" name="country" id="country" type="text">
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <button type="submit" class="btn btn-fill-out submit" name="submit" value="Submit">Save</button>
-                                                </div>
+                        <div class="tab-content dashboard-content">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Add New Address</h5>
+                                </div>
+                                <div class="card-body">
+                                    
+                                    <form method="post" name="address-form" id="addressForm" action="">
+                                        <div class="row">
+                                            
+                                            <div class="form-group col-md-12">
+                                                <label>Building Name </label>
+                                                <input  class="form-control square" name="buildingname" id="buildingname" type="text">
                                             </div>
-                                        </form>
-                                    </div>
+
+                                       
+                                            <div class="form-group col-md-6">
+                                                <label>Pincode </label>
+                                                <input class="form-control square" name="pincode" id="pincode" type="text">
+                                            </div>
+
+                                         
+                                            <div class="form-group col-md-6">
+                                                <label>Street </label>
+                                                <input class="form-control square" name="street" id="street" type="text">
+                                            </div>
+
+                                           
+                                            <div class="form-group col-md-6">
+                                                <label>City </label>
+                                                <input  class="form-control square" name="city" id="city" type="text">
+                                            </div>
+
+                                         
+                                            <div class="form-group col-md-6">
+                                                <label>State </label>
+                                                <input class="form-control square" name="state" id="state" type="text">
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label>Country</label>
+                                                <input class="form-control square" name="country" id="country" type="text">
+                                            </div>
+
+                                            
+                                            <div class="col-md-12">
+                                                <button type="submit" class="btn btn-fill-out submit" name="submitButton" >Submit</button>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 </main>
+<script>
+document.getElementById('addressForm').addEventListener('submit', function(event) {
+    event.preventDefault(); 
+console.log('reached');
+
+    
+    const buildingName = document.getElementById('buildingname').value.trim();
+    const pincode = document.getElementById('pincode').value.trim();
+    const street = document.getElementById('street').value.trim();
+    const city = document.getElementById('city').value.trim();
+    const state = document.getElementById('state').value.trim();
+    const country = document.getElementById('country').value.trim();
+
+    
+    clearErrorMessages(); 
+
+    let hasError = false; 
+
+    if (buildingName === '') {
+        displayErrorMessage('buildingname', 'Building Name is required');
+        hasError = true;
+    }
+
+    if (pincode === '') {
+        displayErrorMessage('pincode', 'Pincode is required');
+        hasError = true;
+    } else if (!/^\d{6}$/.test(pincode)) {
+        displayErrorMessage('pincode', 'Pincode should be a 6-digit number');
+        hasError = true;
+    }
+
+    if (street === '') {
+        displayErrorMessage('street', 'Street is required');
+        hasError = true;
+    }
+
+    if (city === '') {
+        displayErrorMessage('city', 'City is required');
+        hasError = true;
+    }
+
+    if (state === '') {
+        displayErrorMessage('state', 'State is required');
+        hasError = true;
+    }
+
+    if (country === '') {
+        displayErrorMessage('country', 'Country is required');
+        hasError = true;
+    }
+
+    if (!hasError) {
+        
+        this.submit();
+    }
+});
+
+
+function displayErrorMessage(inputId, message) {
+    const inputElement = document.getElementById(inputId);
+    const formGroup = inputElement.closest('.form-group');
+
+    
+    let existingError = formGroup.querySelector('.error-message');
+    if (existingError) {
+        existingError.remove();
+    }
+
+    
+    const errorMessage = document.createElement('div');
+    errorMessage.className = 'error-message';
+    errorMessage.style.color = 'red';
+    errorMessage.textContent = message;
+    formGroup.appendChild(errorMessage);
+}
+
+
+function clearErrorMessages() {
+    const errorMessages = document.querySelectorAll('.error-message');
+    errorMessages.forEach(function(errorMessage) {
+        errorMessage.remove();
+    });
+}
+</script>
 
 <%- include ('../partials/userfooter') %>

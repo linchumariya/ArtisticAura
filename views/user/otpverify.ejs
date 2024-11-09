@@ -73,7 +73,7 @@
             </div>
 
             <!-- Countdown Timer -->
-            <div id="countdown" class="mt-3">5:00</div>
+            <div id="countdown" class="mt-3">1:00</div>
           </form>
         </div>
       </div>
@@ -83,7 +83,8 @@
     <script>
       var message = "<%= message %>" || null;
       var alertType = "<%= alertType %>" || null;
-      let seconds = 300; // 5 minutes
+      let savedTime = sessionStorage.getItem("remainingTime");
+      let seconds = savedTime ? parseInt(savedTime) : 60; // 1 minutes
 
       // Update the countdown timer
       function updateTimer() {
@@ -91,6 +92,8 @@
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
         timerElement.textContent = `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+        sessionStorage.setItem("remainingTime", seconds);
+      
       }
 
       // Start the countdown timer
@@ -111,6 +114,7 @@
             });
             document.getElementById("resend-container").style.display = "block"; // Show resend button
             sessionStorage.setItem("otpResendVisible", "true"); // Store resend visibility
+            sessionStorage.removeItem("remainingTime"); 
           } 
         }, 1000);
       }

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Artistic Aura</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/imgs/theme/Artisticlogo.ico">
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/sass/main.scss">
+    <!-- Added for SweetAlert and Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <style>
+        /* Basic resets */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            overflow-x: hidden;
+        }
+        
+        /* Background for the page */
+        .background {
+            position: fixed;
+            top: 63px; /* Adjusts position to be below the header */
+            width: 100%;
+            height: calc(100% - 63px); /* Ensures background covers the area below the header */
+            z-index: -1;
+            background: url('/assets/imgs/theme/painting1.webp') no-repeat center center fixed, 
+                        url('/public/assets/imgs/theme/painting2.jpg') no-repeat center center fixed;
+            background-size: cover;
+            opacity: 0.3; /* Creates a faint watermark effect */
+        }
+
+        /* Main content styling */
+        .about-container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1; /* Ensures content is above the background */
+        }
+
+        /* Profile photo styling */
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .profile-photo img {
+            width: 100%;
+            height: auto;
+        }
+
+        .about-content {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Headings and paragraph styling */
+        h1 {
+            font-size: 2.5em;
+            color: #444;
+        }
+
+        p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #666;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header-area header-style-1 header-height-2">
+        <div class="header-bottom header-bottom-bg-color sticky-bar">
+            <div class="container">
+                <div class="header-wrap header-space-between position-relative">
+                    <div class="logo logo-width-1 d-block d-lg-none">
+                        <a href="/"><img src="/assets/imgs/theme/icons/artisticAuraa.ico" class="logo-img" alt="logo"></a>
+                    </div>
+                    <div class="header-nav d-none d-lg-flex">
+                        <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
+                            <nav>
+                                <ul>
+                                    <li><a class="active" href="/">Home </a></li>
+                                    <li><a href="/about">About</a></li>
+                                    <li><a href="/profile">Profile</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+    </header>
+
+    <!-- Background Watermark (positioned after header) -->
+    <div class="background"></div>
+
+    <!-- Main About Me Section -->
+    <div class="about-container">
+        <div class="profile-photo">
+            <img src="/assets/imgs/theme/me.jpg" alt="Your Photo">
+        </div>
+        <div class="about-content">
+            <h1>*Welcome to Artistic Aura*
+            </h1>
+            <p>
+                Hello! I'm Linchu Mariya Peter, a passionate artist with a deep love for colors and creativity. My artistic journey began with the need to create captivating art pieces for our hotel, "Grand Vistara Airport Suites." What started as a necessity quickly blossomed into a profound passion and a lifelong pursuit.
+
+            </p>
+            <p>
+                At Artistic Aura, my goal is to bring vibrant colors, intricate details, and rich emotions to life through my artwork. Inspired by the beauty of nature, the charm of everyday objects, and the endless spectrum of colors, I strive to create pieces that not only reflect my vision but also resonate with others.
+
+            </p>
+            <p>
+                I hope my art inspires you and brings a touch of beauty and inspiration to your life. Thank you for joining me on this colorful journey.
+
+            </p>
+            <p>
+                Linchu Mariya Peter
+
+
+            </p>
+        </div>
+    </div>
+
+</body>
+</html>

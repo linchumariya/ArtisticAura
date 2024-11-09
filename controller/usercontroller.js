@@ -5,9 +5,12 @@ const CategoryModel = require("../model/categoryModel");
 const pageHelper = require("../helper/paginationHelper");
 const passport = require('passport');
 const otpGenerator = require('otp-generator');
-
+const STATUS_CODES=require("../helper/statusCode")
 const nodemailer = require("nodemailer");
-const isUser = require('../middleware/user')
+const isUser = require('../middleware/user');
+const walletModel = require("../model/walletModel");
+const user = require("../middleware/user");
+
 const securePassword = async (password) => {
   try {
     const passwordHash = await bcrypt.hash(password, 10);
@@ -38,29 +41,30 @@ const sendMail = async (transporter, mailOptions) => {
 
 const registerLoad = async (req, res) => {
   try {
-    console.log("enter in to the registerload");
     res.render("user/register");
   } catch (error) {
     console.log(error);
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Internal server error" });
   }
 };
 const loginLoad = async (req, res) => {
   try {
-    console.log("enter in to the loginload");
+    // console.log("enter in to the loginload");
     res.render("user/login");
   } catch (error) {
     console.log(error);
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Internal server error" });
   }
 };
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
+
   try {
     const user = await UserModel.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(STATUS_CODES.NOT_FOUND).json({ message: "User not found" });
     }
     
-  
     const otp = otpGenerator.generate(6, { digits: true });
     user.otp = otp;
     await user.save();
@@ -73,12 +77,10 @@ const forgotPassword = async (req, res) => {
       text: `Your OTP is: ${otp}`
     };
     await sendMail(transporter, mailOptions);
-    
-    
-    res.json({ success: true, message: "OTP sent!", email });
+    res.status(STATUS_CODES.OK).json({ success: true, message: "OTP sent!", email });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false,message: "Internal server error" });
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Internal server error" });
   }
 };
 const verifyOtpForPassword = async (req, res) => {
@@ -86,67 +88,61 @@ const verifyOtpForPassword = async (req, res) => {
   try {
     const user = await UserModel.findOne({ email });
     if (!user || user.otp !== otp) {
-      return res.status(400).json({ message: "Invalid OTP" });
+      return res.status(STATUS_CODES.BAD_REQUEST).json({ message: "Invalid OTP" });
     }
-
-    
-    res.json({ success: true,message: "OTP Verified", email });
+    return res.status(STATUS_CODES.OK).json({ success: true,message: "OTP Verified", email });
   } catch (error) {
     console.error(error);
-    res.status(500).json({  success: false,message: "Internal server error" });
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Internal server error" });
   }
 };
 
 const resetPassword = async (req, res) => {
   const { email, newPassword, confirmPassword } = req.body;
   try {
-    console.log("iam new pass",newPassword)
-    console.log("iam confirm pass",confirmPassword)
-    console.log("iam email".email)
     if (newPassword !== confirmPassword) {
-      return res.status(400).json({ message: "Passwords do not match" });
+      return res.status(STATUS_CODES.BAD_REQUEST).json({ message: "Passwords do not match" });
     }
 
     const user = await UserModel.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(STATUS_CODES.NOT_FOUND).json({ message: "User not found" });
     }
-
-  
     user.password = await bcrypt.hash(newPassword, 10);
     user.otp = null; 
-    await user.save();
-
-    return res.json({ success: true, message: "Password updated successfully." });
+   const savedUser= await user.save();
+    return res.status(STATUS_CODES.OK).json({ success: true, message: "Password updated successfully." });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Internal server error" });
   }
 };
 
-
-
-
 const otpLoad = async (req, res) => {
   try {
-    console.log("enter in to the OTPload");
+    // console.log("enter in to the OTPload");
     res.render("user/otpverify", { email: req.query.email || "",
        });
    
   } catch (error) {
     console.log(error);
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Internal server error" });
   }
 };
 const loadHome = async (req, res) => {
   try {
 
-    console.log("load home beginning from google auth",req.session.user)
-    const { cat, search, sort, page = 1 } = req.query;
-
-    let pageNumber = Number(page);
-    if (isNaN(pageNumber) || pageNumber < 1) {
-      pageNumber = 1;
+    // console.log("load home beginning from google auth",req.session.user)
+    const { cat, search, sort } = req.query;
+    let { page } = req.query;
+    if (!page) {
+      page = 1;
     }
+    // console.log("cat,search,",cat,search,sort,page)
+
+  
+    const productTotalCount = await ProductModel.countDocuments({})
+    const ITEMS_PER_PAGE = pageHelper.PRODUCT_PER_PAGE;
 
     let condition = { ispublished: true };
 
@@ -161,7 +157,7 @@ const loadHome = async (req, res) => {
 
     if (search) {
       condition.$or = [
-        { name: { $regex: search, $options: "i" } },
+        { productName: { $regex: search, $options: "i" } },
         { description: { $regex: search, $options: "i" } },
       ];
     }
@@ -170,16 +166,16 @@ const loadHome = async (req, res) => {
 
     if (sort) {
       switch (sort) {
-        case "price_aA_to_zZ": //asc
+        case "price_low_to_high": //asc
           sortCondition = { price: 1 };
           break;
-        case "price_Aa_to_Zz": //desc
+        case "price_high_to_low": //desc
           sortCondition = { price: -1 };
           break;
         case "name_aA_to_zZ": //asc
           sortCondition = { productName: 1 };
           break;
-        case "name_Aa_to_Zz": //desc
+        case "name_zZ_to_aA": //desc
           sortCondition = { productName: -1 };
           break;
           default :
@@ -187,38 +183,57 @@ const loadHome = async (req, res) => {
 
       }
     }
-
-
     // console.log(sortCondition)
 
     const products = await ProductModel
     .find(condition)
     .populate("category")
     .sort(sortCondition)
-    .skip((pageNumber- 1) * pageHelper.ITEMS_PER_PAGE)
+    .skip((page- 1) * pageHelper.ITEMS_PER_PAGE)
     .limit(pageHelper.ITEMS_PER_PAGE);
 
+    const newproducts = await ProductModel
+      .find({})
+      .populate("category")
+      .sort({ createdOn: -1 })
+      .limit(4);
 
+    const newfilteredProducts = newproducts.filter(
+      (product) => product.category
+    );
     // console.log(products);
 
     const categories = await CategoryModel.find({islisted: true});
-     console.log("checking user session from google in home page..." , req.session.user)
+    //  console.log("checking user session from google in home page..." , req.session.user)
 
     res.render("user/user-home", {
+      newproducts: newfilteredProducts,
       products: products,
       catData: categories,
       user: req.session.user,
-      hideOutOfStock
+      hideOutOfStock,
+      currentPage: page,
+      hasNextPage: productTotalCount > page * ITEMS_PER_PAGE,
+      hasPrevPage: page > 1,
+      nextPage: page + 1,
+      prevPage :page-1,
+      lastPage: Math.ceil(productTotalCount / ITEMS_PER_PAGE),
+      query: req.query,
     });
   } catch (error) {
     console.log(error);
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Internal server error" });
   }
 };
 
 const insertUser = async (req, res) => {
   try {
-    console.log("enter in to the post inset");
+    // console.log("enter in to the post inset");
     const { username, email, phoneNumber, password } = req.body;
+    const existingUser = await UserModel.findOne({ email: email });
+    if (existingUser) {
+      return res.render("user/register", { emailExists: true });
+    }
     const spassword = await securePassword(password);
     const saveData = new UserModel({
       name: username,
@@ -230,7 +245,7 @@ const insertUser = async (req, res) => {
 
     const data = await saveData.save();
 
-    console.log(data);
+    // console.log(data);
     if (data) {
       res.render("user/otpverify", { email: data.email ,message: "",   
         alertType: ""});
@@ -253,6 +268,7 @@ const insertUser = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.render("user/register");
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Internal server error" });
   }
 };
 
@@ -263,7 +279,13 @@ const  verifyOtp =async (req, res) => {
       const user = await UserModel.findOne({ email,otp });
       if (user && user.otp === otp) {
           user.otp = null;
+          const wallet=new walletModel({
+            userId:user._id
+          })
+          // console.log("iam wallet created in user",wallet)
+          await wallet.save()
           await user.save();
+
 
           return res.render('user/otpverify', {
               email,
@@ -289,7 +311,7 @@ const  verifyOtp =async (req, res) => {
 };
 
 
-const    resendOtp = async (req, res) => {
+const resendOtp = async (req, res) => {
   const { email } = req.query;
   try {
       const user = await UserModel.findOne({ email: email });
@@ -341,35 +363,52 @@ const loginUser = async (req, res) => {
 
     if (userdata) {
       if (userdata.isBlocked) {
-        return res.send("Your account has been blocked. Please contact support.");
+        return res.status(STATUS_CODES.OK).json({ success: false, message: "AccountBlocked" });
       }
-      const passwordMatch = await bcrypt.compare(password, userdata.password);
-      if (passwordMatch) {
-        req.session.user = userdata;
-        console.log("Login success", req.session.user);
-
-        res.redirect("/");
-      } else {
-        res.send("Invalid email or password");
+      else if (userdata.isBlocked === false) {
+        const passwordMatch = await bcrypt.compare(password, userdata.password);
+        if (passwordMatch) {
+          req.session.user = userdata;
+          console.log("Login success", req.session.user);
+          return res.status(STATUS_CODES.OK).json({ success: true, message: "LoginSuccess" });
+       
+        } else {
+          return res.status(STATUS_CODES.OK).json({ success: false, message: "InvalidCredentials" });
+        
+        }
       }
     } else {
-      res.send("Invalid email or password");
-    }
-  } catch (error) {
+      return res.status(STATUS_CODES.OK).json({ success: false, message: "UserNotRegistered" });
+  }}
+   catch (error) {
     console.error("Error in loginUser:", error);
+    if (!res.headersSent) {  
+      res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "ServerError" });
+    }
   }
 };
 
 const getUserProductDetalis = async (req, res) => {
   try {
-    console.log("i m in product details");
     const userId = req.session.user || null;
-    console.log("iam user my id is",userId)
+    if (userId) {
+      const user = await UserModel.findById(userId);
+      console.log("in side ",user);
+      
+      if (user && user.isBlocked) {
+        // Redirect if the user is blocked
+        return res.redirect('/login');
+      }
+    }
     const Id = req.params.id;
-    console.log(Id);
+    // console.log(Id);
+    
     const product = await ProductModel.findOne({ _id: Id }).populate(
       "category"
     );
+    if (!product) {
+      return res.status(STATUS_CODES.NOT_FOUND).render('user/page404'); 
+    }
 
     const doc = await ProductModel.find({
       category: product.category,
@@ -382,6 +421,7 @@ const getUserProductDetalis = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR);
   }
 };
 const logoutUser = (req, res) => {
@@ -390,6 +430,7 @@ const logoutUser = (req, res) => {
     res.redirect("/");
   } catch (error) {
     console.log(error);
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Internal server error" });
   }
 };
 
@@ -397,7 +438,7 @@ const getUserProfile = async (req, res) => {
   try {
     const userId = req.session.user;
     const user = await UserModel.findById(userId);
-    console.log("userId", userId);
+    // console.log("userId", userId);
 
     res.render("user/profile", {
       users: user,
@@ -405,20 +446,20 @@ const getUserProfile = async (req, res) => {
     });
   } catch (err) {
     console.log(err);
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Internal server error" });
   }
 };
 const getEditProfile = async (req, res) => {
   try {
     const userId = req.session.user;
-    console.log("Iam user of edit", userId);
     const userdata = await UserModel.findOne({ _id: userId });
-    console.log("im user data in user data in edit profile", userdata);
     res.render("user/editProfile", {
       users: userdata,
       user: userId,
     });
   } catch (error) {
     console.log(error.message);
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Internal server error" });
   }
 };
 const postEditProfile = async (req, res) => {
@@ -437,15 +478,13 @@ const postEditProfile = async (req, res) => {
     res.redirect("/editProfile");
   } catch (error) {
     console.log(error.message);
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Internal server error" });
   }
 };
 const postChangePassword = async (req, res) => {
   try {
     const userId = req.session.user;
-    console.log("Iam change password", userId);
     const { currentpassword, newpassword, confirmpassword } = req.body;
-    console.log("Iam password ", req.body);
-
     const userdata = await UserModel.findById(userId);
 
     if (!userdata) {
@@ -479,7 +518,74 @@ const postChangePassword = async (req, res) => {
     res.redirect("/login");
   } catch (error) {
     console.error(error.message);
-    return res.status(500).json({ success: false, message: "Server error" });
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Internal server error" });
+  }
+};
+
+const getWallet=async (req,res)=>{
+  try {
+    const userId=req.session.user._id
+    let userWallet=await walletModel.findOne({userId:userId})
+    if(!userWallet){
+      userWallet=await walletModel.findOneAndUpdate({userId},{balance:0,transactions: []},{upsert:true,new:true})
+    }
+    userWallet.transactions.sort((a, b) => b.date - a.date);
+    
+    res.render('user/wallet',{
+      user:req.session,
+      userWallet:userWallet,
+      userData:req.session.user
+
+    })
+    
+  } catch (error) {
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Internal server error" });
+    
+  }
+}
+const postAmount=async(req,res)=>{
+  try {
+    const userId=req.session.user._id
+    const amount=parseFloat(req.body.amount)
+    let userWallet=await walletModel.findOne({userId:userId})
+    if(!userWallet){
+      userWallet=new walletModel({
+        userId:userId,
+        balance:amount,
+        transactions: [
+          {
+            type: 'credit',
+            amount: amount,
+            description: 'Initial wallet deposit',
+          },
+        ],
+        userData:req.session.user
+      })
+    }
+    else{
+      userWallet.balance+=amount
+      userWallet.transactions.push({
+        type: 'credit',
+        amount: amount,
+        description: 'Wallet deposit',
+      });
+    }
+    await userWallet.save()
+    res.status((STATUS_CODES.OK)).json({ success: true });
+  } catch (error) {
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Internal server error" });
+  }
+}
+
+const getAbout = async (req, res, next) => {
+  try {
+    const userId = req.session.user || null;
+    console.log("I m in getAbout ");
+   
+    res.render("user/about",{user:userId});
+  } catch (error) {
+    console.error("Error in getConfirmOrder:", error);
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ message: "Server error" });
   }
 };
 
@@ -501,4 +607,7 @@ module.exports = {
   getEditProfile,
   postEditProfile,
   postChangePassword,
+  getWallet,
+  postAmount,
+  getAbout
 };

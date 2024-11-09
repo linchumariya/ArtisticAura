@@ -78,43 +78,78 @@
             data: JSON.stringify({ productId: productId }),
             success: function(data) {
                 if (data.success) {
-                    alert("Product added to cart successfully.");
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Added to Cart',
+                        text: 'Product added to cart successfully.',
+                        confirmButtonText: 'OK'
+                    });
                     // Optionally, update the UI to reflect the addition
                 } else {
-                    alert(data.message||"Failed to add product to cart.");
-                }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Failed',
+                        text: data.message || "Failed to add product to cart.",
+                    });}
             },
             error: function(xhr, status, error) {
                 
                 console.error('Error:', error);
-                alert("An error occurred while adding the product to the cart.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: "An error occurred while adding the product to the cart.",
+                });
             }
         });
     }
 
     // Function to remove an item from the wishlist
     function remove(productId) {
-        if (confirm("Are you sure you want to remove this item from your wishlist?")) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to undo this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, remove it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
             $.ajax({
                 url: `/removewishlist/${productId}`,
                 type: 'GET',
                 contentType: 'application/json',
                 success: function(data) {
                     if (data.success) {
-                        alert("Product removed from wishlist successfully.");
-                        // Optionally, remove the item from the UI
-                        location.reload(); // Reload the page to reflect changes
-                    } else {
-                        alert("Failed to remove product from wishlist.");
+                        Swal.fire(
+                                'Removed!',
+                                'Product has been removed from your wishlist.',
+                                'success'
+                            ).then(() => {
+                                location.reload(); // Reload the page to reflect changes
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Failed',
+                                text: "Failed to remove product from wishlist.",
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: "An error occurred while removing the product from the wishlist.",
+                        });
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);
-                    alert("An error occurred while removing the product from the wishlist.");
-                }
-            });
+                });
+            }
+        });
         }
-    }
+    
 </script>
 
 <%- include ('../partials/userfooter') %>

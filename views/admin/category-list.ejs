@@ -1,5 +1,16 @@
 <%- include("../partials/adminheader.ejs") %>
+<style>
+    .btn-toggle-status.listed {
+    background-color: red;
+    color: white;
+}
 
+.btn-toggle-status.unlisted {
+    background-color: green;
+    color: white;
+}
+
+</style>
 <section class="content-main">
     <div class="content-header">
         <div>
@@ -56,7 +67,7 @@
                                         <% } %>
                                     </td>
                                     <td>
-                                        <button class="btn btn-toggle-status" data-id="<%= row._id %>" style="background-color: <%= row.islisted ? "red" : "green" %>; color: white;">
+                                        <button class="btn btn-toggle-status <%= row.islisted ? 'listed' : 'unlisted' %>" data-id="<%= row._id %>">
                                             <%= row.islisted ? 'Unlist' : 'List' %>
                                         </button>
                                     </td>
@@ -72,7 +83,7 @@
 </section>
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-    // Handle category submission
+ 
     document.getElementById('categoryForm').addEventListener('submit', async function (event) {
         event.preventDefault();
 
@@ -80,7 +91,6 @@
         const description = document.getElementById('description').value.trim();
         const alphabetRegex = /^[a-zA-Z.\s]+$/;
 
-        // Validation
         if (!categoryName) {
             document.getElementById('categoryName-error').innerText = 'Name is required';
             return;
@@ -120,7 +130,7 @@
         }
     });
 
-    // Handle category status toggle (List/Unlist)
+   
     document.querySelectorAll('.btn-toggle-status').forEach(button => {
         button.addEventListener('click', async function () {
             const categoryId = this.getAttribute('data-id');
@@ -139,6 +149,7 @@
 });
 
 </script>
+<%-include("../partials/adminfooter.ejs")  %> 
 
 
 

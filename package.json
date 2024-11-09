@@ -2,17 +2,17 @@
   "name": "week-8",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "nodemon app.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
-    "body-parser": "^1.20.2",
     "dotenv": "^16.4.5",
+    "easyinvoice": "^3.0.47",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
@@ -26,6 +26,8 @@
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "path": "^0.12.7",
+    "puppeteer-core": "^23.6.0",
+    "razorpay": "^2.9.4",
     "sharp": "^0.33.4",
     "sweetalert2": "^11.14.0",
     "week-8": "file:"

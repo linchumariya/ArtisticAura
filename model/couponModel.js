@@ -1,12 +1,10 @@
 const mongoose=require('mongoose')
 const couponSchema=mongoose.Schema({
-    userId:[{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'User',
-    }],
+
     coupon:{
         type:String,
         required:true,
+        unique: true,
     },
     description:{
         type:String,
@@ -19,13 +17,18 @@ const couponSchema=mongoose.Schema({
     percentage:{
         type:Number,
         required:true,
+        validate: {
+            validator: (value) => value > 0 && value <= 100,
+            message: 'Percentage must be between 1 and 100',
+          },
     },
-    maximumamount:{
+    maximumAmount:{
         type:Number,
         required:true
     },
     expiryDate:{
         type:Date,
-    }
+    },
+    
 })
 module.exports=mongoose.model('Coupon',couponSchema)

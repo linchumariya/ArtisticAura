@@ -1,0 +1,217 @@
+<%- include ('../partials/userheader') %>
+<main class="main"></main>
+    <div class="page-header breadcrumb-wrap">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="/profile" rel="nofollow">My Wallet</a> 
+                <span></span> Wallet
+            </div>
+        </div>
+    </div>
+<section>
+    <section class="pt-50 pb-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 m-auto">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="dashboard-menu">
+                                <ul class="nav flex-column" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link " href="/profile"></i>Dashboard</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link active" href="/myOrders" ><i class="fi-rs-shopping-bag mr-10"></i>Orders</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link"  href="/addressview" ><i class="fi-rs-marker mr-10"></i>My Address</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/editprofile" ><i class="fi-rs-user mr-10"></i>Account details</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/wallet" ><i class="fi-rs-user mr-10"></i>Wallet details</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="tab-content dashboard-content">
+                                <div class="tab-pane fade active show" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3 class="mb-0">Your  Wallet</h3>
+                                        </div>
+    <div class="container mt-4">
+        <div class="text-center mb-4">
+            <h5>Your Referral Code:</h5>
+            <h6><strong><%= userData.referalcode %></strong></h6>
+            <p>*Refer and earn Rs.1000! You and the person who uses your referral code will receive Rs.1000 each.</p>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h4 class="text-center">My Wallet</h4>
+                    </div>
+                    <div class="card-body">
+                        <% if (userWallet) { %>
+                            <h5 class="text-center">Balance: <span id="balance">Rs. <%= userWallet.balance ?? '0' %>.00</span></h5>
+                        <% } else { %>
+                            <h5 class="text-center">Balance: <span id="balance">Rs. 0.00</span></h5>
+                        <% } %>
+                        <form id="depositForm">
+                            <div class="form-group mt-3">
+                                <label for="deposit-amount">Deposit Amount:</label>
+                                <input type="text" class="form-control" id="deposit-amount" name="amount" placeholder="Enter amount">
+                                <div id="amount-validation" style="color: green;"></div>
+                            </div>
+                            <br><br>
+                            <button type="button" class="btn btn-primary btn-block" onclick="validateAndProceed()">Deposit</button>
+                            <br><br>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="text-center">Transaction History</h4>
+                    </div>
+                    <div class="card-body p-0">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Credit/Debit</th>
+                            </tr>
+                        </thead>
+                      <!-- transaction----------------------------- -->
+                      <tbody>
+                        <% if (userWallet && userWallet.transactions && userWallet.transactions.length > 0) { %>
+                            <% userWallet.transactions.forEach(transaction => { %>
+                                <tr>
+                                    <td><%= new Date(transaction.date).toLocaleString() %></td> <!-- Format the date -->
+                                    <td>Rs.<%= transaction.amount %></td>
+                                    <td><%= transaction.type %></td> <!-- Type can be 'credit' or 'debit' -->
+                                </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="4" class="text-center">No transactions available</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+
+                    </table>
+                </div>
+            </div>
+                <div class="pagination-area mt-15 mb-50">
+                    <nav aria-label="Page navigation example">
+                        <!-- pagination -------------------------------------------->
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+function validateAmount(amount) {
+    return !isNaN(amount) && amount >= 100 && amount <= 35000;
+}
+function initiateRazorpayPayment(amount) {
+        // Implement your Razorpay payment initiation logic here
+        console.log("Razorpay payment initiated for amount: " + amount);
+    }
+
+    function validateAndProceed() {
+        var amountInput = document.getElementById("deposit-amount").value;
+        var amount = parseFloat(amountInput);
+        var validationMessage = document.getElementById("amount-validation");
+
+        if (validateAmount(amount)) {
+            validationMessage.innerText = "Valid";
+            validationMessage.style.color = "green";
+            initiateRazorpayPayment(amount); // Call the Razorpay function if amount is valid
+        } else {
+            validationMessage.innerText = "Amount must be between Rs. 100 and Rs. 35000.";
+            validationMessage.style.color = "red";
+        }
+    }
+            function initiateRazorpayPayment() {
+                const user = {
+                    name: "<%= userData.name %>",
+                    email: "<%= userData.email %>",
+                    phone: "<%= userData.phone %>",
+                };
+                 const rzp_key = '<%= process.env.RAZORPAY_KEY_ID %>';
+                 var amount = document.getElementById('deposit-amount')
+                const walletAmount = parseInt(amount.value);
+
+    //alert(order.amount)
+
+    var options = {
+    "key": rzp_key, 
+    "amount": walletAmount * 100,
+    "currency": "INR",
+    "name": "Artistic Aura", 
+    "description": "Artistic Aura Payment System",
+    "image": "/assets/imgs/theme/artisticAura.png",
+   
+    handler: function (response) {
+                        console.log(response);
+                        if (response.razorpay_payment_id) {
+                            // Payment successful
+                            updateWalletBalance(walletAmount, 'Success');
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 1000);
+                        } else {
+                            // Payment failed
+                            updateWalletBalance(walletAmount, 'Fail');
+                        }
+                    },
+        
+                    prefill: {
+                        name: user.name,
+                        email: user.email,
+                        contact: user.phone,
+                    },
+                    theme: {
+                        color: "#3399cc",
+                    },
+                };
+        
+                var rzp = new Razorpay(options);
+                rzp.open();
+                
+                // Prevent default form submission
+                return false;
+            }
+        
+            function updateWalletBalance(amount) {
+                fetch('/walletdeposite', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        amount: amount,
+                    })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log("Wallet balance updated successfully");
+                    } else {
+                        console.error("Failed to update wallet balance");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error updating wallet balance:", error);
+                });
+            }
+</script>
+<%- include ('../partials/userfooter') %>

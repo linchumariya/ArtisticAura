@@ -1,0 +1,83 @@
+<%- include("../partials/adminheader.ejs") %>
+<section class="content-main">
+    <div class="row">
+        <div class="col-9">
+            <div class="content-header">
+                <h2 class="content-title">Edit Coupon</h2>
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row gx-5">
+                        <div class="col-lg-9">
+                            <section class="content-body p-xl-4">
+                                <form action="/updateCoupon/<%= coupon._id %>" method="post" name="couponForm" onsubmit="return validateForm()">
+                                    <% if (locals.alert) { %>
+                                        <div class="alert alert-danger text-center m-3" id="error">
+                                            <%= locals.alert %>
+                                        </div>
+                                    <% } %> 
+                                    <div class="row mb-4">
+                                       
+                                        <label class="col-lg-3 col-form-label">Coupon name*</label>
+                                        <div class="col-lg-9">
+                                            <input type="text" class="form-control" name="coupon" id="coupon" value="<%= coupon.coupon %>" placeholder="Type here">
+                                            <span id="coupon-error" style="font-size: 14px; margin-top: -20px; color: red;"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <label class="col-lg-3 col-form-label">Description*</label>
+                                        <div class="col-lg-9">
+                                            <textarea name="description" id="description" class="form-control" placeholder="Type here" rows="4"><%= coupon.description %></textarea>
+                                            <span id="description-error" style="font-size: 14px; margin-top: -20px; color: red;"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mb-4">
+                                        <label class="col-lg-3 col-form-label">percentage*</label>
+                                        <div class="col-lg-9">
+                                            <input type="text" class="form-control" name="percentage" id="percentage" value="<%= coupon.percentage %>" placeholder="Type here">
+                                            <span id="percentage-error" style="font-size: 14px; margin-top: -20px; color: red;"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <label class="col-lg-3 col-form-label">Maximum Amount*</label>
+                                        <div class="col-lg-9">
+                                            <input type="text" class="form-control" name="maximumAmount" id="maximumamount" value="<%= coupon.maximumAmount %>" placeholder="Type here">
+                                            <span id="maximumamount-error" style="font-size: 14px; margin-top: -20px; color: red;"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <label class="col-lg-3 col-form-label">Expiry Date*</label>
+                                        <div class="col-lg-9">
+                                            <input type="date" class="form-control" name="expiryDate" id="expiryDate" value="<%= coupon.expiryDate.toISOString().split('T')[0] %>" placeholder="Type here">
+                                            <span id="expiryDate-error" style="font-size: 14px; margin-top: -20px; color: red;"></span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <button type="submit" class="btn btn-md rounded font-sm hover-up">Submit</button>
+                                    </div>
+                                </form>
+                            </section>
+                        </div> 
+                    </div> 
+                </div> 
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    if (res.sucess) {
+Swal.fire({
+  position: "top-end",
+  icon: "success",
+  title: "Your work has been saved",
+  showConfirmButton: false,
+  timer: 1500
+});
+    }
+</script>
+
+<%- include ('../partials/adminfooter') %>

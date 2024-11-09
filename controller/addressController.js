@@ -5,16 +5,13 @@ const CategoryModel=require('../model/categoryModel')
 const AddressModel=require('../model/addressModel')
 const mongoose=require('mongoose');
 const user = require("../middleware/user");
+const STATUS_CODES=require("../helper/statusCode")
 
 const getAddress =async (req, res) => {
   try {
 
     const userId  = req.session.user._id
-    console.log(userId)
     const addressDocument = await AddressModel.findOne({userId:userId});
-    //const addresses = AddressModel.find({})
-
-    // console.log(addressDocument)
     if (!addressDocument || !addressDocument.addresses || addressDocument.addresses.length === 0) {
     res.render("user/addressview",{user: req.session.user,
       addresses:[],
@@ -26,6 +23,7 @@ const getAddress =async (req, res) => {
   })
   } catch (error) {
     console.log(error);
+    return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Error fetching address" });
   }
   
   };
@@ -39,6 +37,7 @@ const getAddAddress=async(req,res)=>{
     
   } catch (error) {
     console.log(error);
+    return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Error displaying add address form" });
     
   }
 }
@@ -55,10 +54,7 @@ const getAddAddress=async(req,res)=>{
         state: req.body.state,
         country: req.body.country,
       };
-      
-
       if (!userAddress) {
-        // console.log("new address");
         userAddress = new AddressModel({
             userId: userId,
             addresses: [newAddress]
@@ -66,14 +62,14 @@ const getAddAddress=async(req,res)=>{
       
     } else {
       
-        userAddress.addresses.push(newAddress);
-        
+        userAddress.addresses.push(newAddress); 
     }
     await userAddress.save();
       res.redirect('/addressview');
       
     } catch (error) {
       console.log(error);
+      return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Failed to add address" });
     }
   };
 
@@ -91,25 +87,19 @@ const deleteAddress = async (req, res) => {
     );
 
     if (result.modifiedCount === 0) {
-      return res.status(404).json({ success: false, message: "Address not found" });
+      return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: "Address not found" });
     }
-
-    return res.status(200).json({ success: true, message: "Address removed successfully" });
+    return res.status(STATUS_CODES.OK).json({ success: true, message: "Address removed successfully" });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ success: false, message: "Failed to remove address" });
+    return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Failed to remove address" });
   }
 };
 
-
-
 const getEditAddress=async (req,res)=>{
   try {
-
     const userId=req.session.user._id;
-    // console.log(userId)
     const addressId=req.params.id;
-    // console.log(addressId)
     const user=req.session.user;
     const userAddress=await AddressModel.findOne({userId:userId})
     const address=userAddress.addresses.find(
@@ -121,6 +111,7 @@ const getEditAddress=async (req,res)=>{
     })
   } catch (error) {
     console.log(error);
+    return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Error fetching address for editing" });
   }
 }
 
@@ -146,8 +137,14 @@ address.buildingname = req.body.buildingname,
           }
             catch (error) {
               console.log(error.message);
+              return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Failed to edit address" });
             }
 };
   
 
-  module.exports = {getAddress,getAddAddress,postEditAddress,getEditAddress,deleteAddress,postAddAddress}
+  module.exports = {getAddress,
+    getAddAddress,
+    postEditAddress,
+    getEditAddress,
+    deleteAddress,
+    postAddAddress}

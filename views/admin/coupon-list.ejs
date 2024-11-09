@@ -1,0 +1,85 @@
+<%- include("../partials/adminheader.ejs") %>
+    <section class="content-main">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">Coupon</h2>
+            </div>
+            <div>
+                <a href="/addCoupon" class="btn btn-primary"><i class="text-muted material-icons md-post_add"></i>Add New Coupon</a>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Sl No.</th>
+                                <th>Coupon</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                                <th>List/Unlist</th>
+                                <th class="text-end">Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% coupon.forEach((row,index)=>{ %>
+                            <tr>
+                                <td><%= index+1 %></td>
+                                <td><b><%= row.coupon%></b></td>
+                                <td><%= row.description %></td>
+                                <td>
+                                    <% if (row.isListed==true) { %>
+                                        <span class="badge badge-pill badge-soft-success">isListed</span>
+                                    <% } else { %>
+                                        <span class="badge badge-pill badge-soft-danger">Unlisted</span>
+                                    <% } %>
+                                </td>
+                               
+                                <td>
+                                    <% if (row.isListed == false) { %>
+                                      <button onclick="toggleCouponStatus('<%= row._id %>')" class="btn btn-md rounded font-sm">List</button>
+                                    <% } else { %>
+                                      <button onclick="toggleCouponStatus('<%= row._id %>')" class="btn btn-danger rounded font-sm">Unlist</button>
+                                    <% } %>
+                                </td>
+
+                                <td class="text-end">
+                                    <a href="/editCoupon/<%= row._id %>" class="btn btn-md rounded font-sm">Edit</a>
+                                </td>
+                                  
+                            </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div> <!-- table-responsive//end -->
+            </div>
+            <!-- card-body end// -->
+        </div>
+        <div class="pagination-area mt-30 mb-50">
+            
+        </div>
+    </section> <!-- content-main end// -->
+    <script>
+        function toggleCouponStatus(rowid){
+            fetch(`/publish/${rowid}`,{
+                method:'POST',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body:JSON.stringify({rowid:rowid})
+            })
+            .then(response=>{
+                if(response.ok){
+                    location.reload()
+                }else{
+                    console.error("Failed to toggle")
+                }
+            })
+            .catch(error=>{
+                console.error("Eroor in toggling")
+            })
+        }
+
+    </script>
+<%- include ('../partials/adminfooter') %>

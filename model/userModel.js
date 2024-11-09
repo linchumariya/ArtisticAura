@@ -31,12 +31,29 @@ const userSchem=new mongoose.Schema({
       }, googleId: {
         type: String
       },
+      referalCode: {
+        code: {
+          type: Number,
+          default: function () {
+            return Math.floor(100000 + Math.random() * 700000).toString();
+          },
+          unique: true,
+        },
+        redeemStatus: {
+          type: Boolean,
+          default: false,
+        }
+      },
         
       created:{
         type:Date,
         required: true,
         default: Date.now
-      }
+      },
+      usedCoupons: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Coupon',
+      }],
 })
 
 const User=mongoose.model("User",userSchem)

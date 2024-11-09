@@ -12,7 +12,7 @@
     <meta property="og:url" content="">
     <meta property="og:image" content="">
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/favicon.svg">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/Artisticlogo.ico">
     <!-- Template CSS -->
     <link rel="stylesheet" href="assets/css/main.css?v=3.4">
 </head>
@@ -24,12 +24,11 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-10">
                         <div class="row justify-content-center">
-                          
-                            
-                            <div class="col-lg-6">
-                                <div class="login_wrap widget-taber-content p-30 background-white border-radius-5">
-                                    <div class="padding_eight_all bg-white">
-                                        <div class="heading_s1">
+                            <div class="col-lg-5">
+                                <div class="login_wrap p-30 background-white border-radius-10 mb-md-5 mb-lg-0 mb-sm-5">
+                                    <!-- Logo Section -->
+                                    <img src="/assets/imgs/theme/artisticAura.png" alt="ArtisticAura Logo" class="logo"style="width: 150px; height: auto; display: block; margin: 0 auto;">
+                                    <div class="heading_s1"style="text-align: center;">
                                             <h3 class="mb-30">Create an Account</h3>
                                         </div>
                                         
@@ -68,6 +67,18 @@
                                             </div>
                                             <div id="submit-error"></div>
                                         </form>
+                                        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+                                        <% if (typeof emailExists !== 'undefined' && emailExists) { %>
+                                            <script>
+                                                Swal.fire({
+                                                    icon: "error",
+                                                    title: "Oops...",
+                                                    text: "Email already exists!",
+                                                    confirmButtonColor: "#d33"
+                                                });
+                                            </script>
+                                            <% } %>
                                         <div class="divider-text-center mt-15 mb-15">
                                             <span> or</span>
                                         </div>
@@ -190,7 +201,7 @@
       }
     
       
-      if (!phone.match(/^[0-9]{10}$/)) {
+      if (!phone.match(/^[0-9]{10}$/)|| phone === "0000000000" || phone === "9999999999") {
         phoneError.innerHTML = "Invalid phone number";
         phoneError.style.color = "red";
         return false;

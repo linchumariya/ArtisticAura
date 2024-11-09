@@ -38,7 +38,7 @@
                                     
                                             <td><%= row.billingdetails.name %></td>
                                             <td><%= row.billingdetails.email %></td>
-                                            <td><%= row.totalPrice %></td>
+                                            <td><%= row.totalPrice-row.discountAmount %></td>
                                             <td><%= row.orderStatus %></td>
                                             <td><%= row.orderDate %></td>
                                             <td class="text-end">
@@ -118,6 +118,6 @@
         }
        </script>
        
-       
+       <%-include("../partials/adminfooter.ejs")  %> 
        
       

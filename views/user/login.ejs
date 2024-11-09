@@ -12,148 +12,139 @@
     <meta property="og:url" content="">
     <meta property="og:image" content="">
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/favicon.svg">
-    <!-- Template CSS -->
+    <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/Artisticlogo.ico">
     <link rel="stylesheet" href="assets/css/main.css?v=3.4">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">
 
-<!-- SweetAlert2 JS -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+
 </head>
 
 <body>
-   
-        <section class="pt-150 pb-150">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-10">
-                        <div class="row justify-content-center">
-                            <div class="col-lg-5">
-                                <div class="login_wrap widget-taber-content p-30 background-white border-radius-10 mb-md-5 mb-lg-0 mb-sm-5">
-                                    <div class="padding_eight_all bg-white">
-                                        <div class="heading_s1">
-                                            <h3 class="mb-30">Login</h3>
-                                        </div>
-                                        <form method="post" action="/loginn">
-                                            <div class="form-group">
-                                                <input type="text" required="" name="email" placeholder="Your Email">
-                                            </div>
-                                            <div class="form-group">
-                                                <input required="" type="password" name="password" placeholder="Password">
-                                            </div>
-                                            <div class="login_footer form-group">
-                                                <div class="chek-form">
-                                                    <div class="custome-checkbox">
-                                                        <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="">
-                                                        <label class="form-check-label" for="exampleCheckbox1"><span>Remember me</span></label>
-                                                    </div>
-                                            <div class="form-group">
-                                                <button type="submit" class="btn btn-fill-out btn-block hover-up" name="login">Log in</button>
-                                            </div>
-                                            <div class="text-muted text-center">Dont have an account? <a href="/register">Sign up now</a></div>
-                                        </div>
-                                    </form>
-                                        <div class="text-center">
-                                            <a href="#" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">Forgot Password?</a>
-                                        </div><!-- Forgot Password Modal -->
-<div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <form id="forgotPasswordForm" action="/forgotPassword" method="POST">
-          <div class="modal-header">
-            <h5 class="modal-title" id="forgotPasswordLabel">Forgot Password</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <label for="email" class="form-label">Enter your registered email</label>
-              <input type="email" class="form-control" id="email" name="email" required>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Send OTP</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-  
-  <!-- OTP Verification Modal -->
-  <div class="modal fade" id="otpModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <form id="otpForm" action="/verifyOtpForPassword" method="POST">
-          <div class="modal-header">
-            <h5 class="modal-title" id="otpModalLabel">Verify OTP</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <label for="otp" class="form-label">Enter OTP sent to your email</label>
-              <input type="hidden" name="email" id="otpEmail">
-              <input type="text" class="form-control" id="otp" name="otp" required>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Verify OTP</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Reset Password Modal -->
-  <div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="resetPasswordLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <form id="resetPasswordForm" action="/resetPassword" method="POST">
-          <div class="modal-header">
-            <h5 class="modal-title" id="resetPasswordLabel">Reset Password</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <input type="hidden" name="email" id="resetEmail">
-            <div class="mb-3">
-              <label for="newPassword" class="form-label">New Password</label>
-              <input type="password" class="form-control" id="newPassword" name="newPassword" required>
-            </div>
-            <div class="mb-3">
-              <label for="confirmPassword" class="form-label">Confirm Password</label>
-              <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Reset Password</button>
-          </div>
-       
-      </div>
-    </div>
-  </div>
-  
-  <script>
-    // Script to handle modals based on backend responses
-    function openOtpModal(email) {
-      document.getElementById('otpEmail').value = email;
-      var otpModal = new bootstrap.Modal(document.getElementById('otpModal'));
-      otpModal.show();
-    }
-  
-    function openResetPasswordModal(email) {
-      document.getElementById('resetEmail').value = email;
-      var resetPasswordModal = new bootstrap.Modal(document.getElementById('resetPasswordModal'));
-      resetPasswordModal.show();
-    }
-  </script>
-  
+<main>
+  <section class="pt-150 pb-150">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-10">
+          <div class="row justify-content-center">
+            <div class="col-lg-5">
+              <div class="login_wrap p-30 background-white border-radius-10 mb-md-5 mb-lg-0 mb-sm-5">
+                                <!-- Logo Section -->
+                <img src="/assets/imgs/theme/artisticAura.png" alt="ArtisticAura Logo" class="logo"style="width: 150px; height: auto; display: block; margin: 0 auto;">
+                  <div class="heading_s1"style="text-align: center;">
+                      <h3 class="mb-30">Login</h3>
+                  </div>
+                      <form method="post" action="/loginn">
+                        <div class="form-group">
+                           <input type="text" required="" name="email" placeholder="Your Email">
+                        </div>
+                        <div class="form-group">
+                          <input required="" type="password" name="password" placeholder="Password">
+                        </div>
+                        <div class="login_footer form-group">
+                         <div class="chek-form">
+                          <div class="custome-checkbox">
+                            <input class="form-check-input" type="checkbox" name="checkbox" id="rememberMe" value="">
+                                <label class="form-check-label" for="exampleCheckbox1"><span>Remember me</span></label>
+                          </div>
+                          <div class="form-group">
+                             <button type="submit" class="btn btn-fill-out btn-block hover-up" name="login">Log in</button>
+                          </div>
+                          <div class="text-muted text-center">Dont have an account?<br><a href="/register">Sign up now</a></div>
+                        </div>
+                      </form>
+                  <div class="text-center">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">Forgot Password?</a>
+                  </div><!-- Forgot Password Modal -->
+                      <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <form id="forgotPasswordForm" action="/forgotPassword" method="POST">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="forgotPasswordLabel">Forgot Password</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                  <div class="mb-3">
+                                    <label for="email" class="form-label">Enter your registered email</label>
+                                      <input type="email" class="form-control" id="email" name="email" required>
+                                  </div>
+                                </div>
+                               <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Send OTP</button>
+                               </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                                                      
+                        <!-- OTP Verification Modal -->
+                      <div class="modal fade" id="otpModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <form id="otpForm" action="/verifyOtpForPassword" method="POST">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="otpModalLabel">Verify OTP</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                              <div class="mb-3">
+                              <label for="otp" class="form-label">Enter OTP sent to your email</label>
+                              <input type="hidden" name="email" id="otpEmail">
+                                <input type="text" class="form-control" id="otp" name="otp">
+                                  </div>
+                                  <div id="otpTimer" class="text-center"></div>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button id="otpButton" type="submit" class="btn btn-primary">Send OTP</button>
+                                  </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                          <!-- Reset Password Modal -->
+                      <div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="resetPasswordLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <form id="resetPasswordForm" action="/resetPassword" method="POST">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="resetPasswordLabel">Reset Password</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                      <input type="hidden" name="email" id="resetEmail">
+                                    <div class="mb-3">
+                                      <label for="newPassword" class="form-label">New Password</label>
+                                      <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+                                    </div>
+                                    <div class="mb-3">
+                                      <label for="confirmPassword" class="form-label">Confirm Password</label>
+                                      <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>                             
                                     </div>
                                 </div>
-                            </div>   
+                              <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Reset Password</button>
+                              </div>
+                            </form>                            
+                          </div>
                         </div>
+                      </div>
                     </div>
+                  </div>
+                                                      
                 </div>
-            </div>
-        </section>
-    </main>
+              </div>
+            </div>   
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
     
     <!-- Preloader Start -->
     <div id="preloader-active">
@@ -170,171 +161,361 @@
             </div>
         </div>
     </div>
-    <!-- Vendor JS-->
-    <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
-    <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
-    <script src="assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
-    <script src="assets/js/vendor/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/plugins/slick.js"></script>
-    <script src="assets/js/plugins/jquery.syotimer.min.js"></script>
-    <script src="assets/js/plugins/wow.js"></script>
-    <script src="assets/js/plugins/jquery-ui.js"></script>
-    <script src="assets/js/plugins/perfect-scrollbar.js"></script>
-    <script src="assets/js/plugins/magnific-popup.js"></script>
-    <script src="assets/js/plugins/select2.min.js"></script>
-    <script src="assets/js/plugins/waypoints.js"></script>
-    <script src="assets/js/plugins/counterup.js"></script>
-    <script src="assets/js/plugins/jquery.countdown.min.js"></script>
-    <script src="assets/js/plugins/images-loaded.js"></script>
-    <script src="assets/js/plugins/isotope.js"></script>
-    <script src="assets/js/plugins/scrollup.js"></script>
-    <script src="assets/js/plugins/jquery.vticker-min.js"></script>
-    <script src="assets/js/plugins/jquery.theia.sticky.js"></script>
-    <!-- Template  JS -->
-    <script src="./assets/js/main.js?v=3.4"></script>
-    <script>
+     <!-- Vendor JS -->
+     <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
+     <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
+     <script src="assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.js"></script>
+     <script src="assets/js/vendor/bootstrap.bundle.min.js"></script>
+ 
+     <!-- Plugin JS -->
+     <script src="assets/js/plugins/jquery-ui.js"></script>
+     <script src="assets/js/plugins/slick.js"></script>
+     <script src="assets/js/plugins/jquery.syotimer.min.js"></script>
+     <script src="assets/js/plugins/wow.js"></script>
+     <script src="assets/js/plugins/perfect-scrollbar.js"></script>
+     <script src="assets/js/plugins/magnific-popup.js"></script>
+     <script src="assets/js/plugins/select2.min.js"></script>
+     <script src="assets/js/plugins/waypoints.js"></script>
+     <script src="assets/js/plugins/counterup.js"></script>
+     <script src="assets/js/plugins/jquery.countdown.min.js"></script>
+     <script src="assets/js/plugins/images-loaded.js"></script>
+     <script src="assets/js/plugins/isotope.js"></script>
+     <script src="assets/js/plugins/scrollup.js"></script>
+     <script src="assets/js/plugins/jquery.vticker-min.js"></script>
+     <script src="assets/js/plugins/jquery.theia.sticky.js"></script>
+ 
+     <!-- SweetAlert2 JS -->
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+ 
+     <!-- Slick Carousel JS -->
+     <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+ 
+     <!-- Magnific Popup JS -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
+ 
+     <!-- jQuery UI JS -->
+     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+ 
+     <!-- Your main script -->
+     <script src="./assets/js/main.js?v=3.4"></script>
+     <script>
+     document.addEventListener('DOMContentLoaded', function() {
+      // Initialize elements
+      const otpButton = document.getElementById('otpButton');
+      // const resendOtpButton = document.getElementById('resendOtpButton');
+      const rememberMeCheckbox = document.getElementById('rememberMe');
+      const emailInput = document.querySelector('input[name="email"]');
+      const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+      const otpForm = document.getElementById('otpForm');
+      const resetPasswordForm = document.getElementById('resetPasswordForm');
+    
+      let otpTimer;
+      let timeLeft = 60;
+      let isVerifying = false;
+      // Function to start OTP Timer
+      function startOtpTimer() {
+        timeLeft = 60;
+        // otpButton.disabled = true;
+        // otpButton.textContent = `Verify OTP (${timeLeft})`;
+        // resendOtpButton.style.display = 'none';
+    
+        otpTimer = setInterval(() => {
+          timeLeft--;
+          otpButton.textContent = `Verify OTP (${timeLeft})`;
+    
+          if (timeLeft <= 0) {
+            clearInterval(otpTimer);
+            otpButton.disabled = false;
+            otpButton.textContent = 'Resend OTP';
+            // resendOtpButton.style.display = 'block';
+          }
+        }, 1000);
+      }
+    
+      // Function to open OTP modal
+      function openOtpModal(email) {
+        document.getElementById('otpEmail').value = email;
+        const otpModal = new bootstrap.Modal(document.getElementById('otpModal'));
+        otpModal.show();
+        startOtpTimer();
+      }
+    
+      // Function to open Reset Password modal
+      function openResetPasswordModal(email) {
+        const resetEmailInput = document.getElementById('resetEmail');
+        resetEmailInput.value = email;
+        console.log("email set:", resetEmailInput.value)
+        const resetPasswordModal = new bootstrap.Modal(document.getElementById('resetPasswordModal'));
         
-        document.getElementById('forgotPasswordForm').addEventListener('submit', function(event) {
-          event.preventDefault(); 
-          
-          const email = document.getElementById('email').value;
-      
-          fetch('/forgotPassword', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email })
-          })
-          .then(response => response.json())
-          .then(data => {
-            if (data.success) {
-                Swal.fire({
-          icon: 'success',
-          title: 'OTP Sent!',
-          text: 'Please check your email for the OTP.',
-          confirmButtonText: 'OK'
-        }).then(() => {
-        
-          openOtpModal(email);
-        });
-            } else {
-                Swal.fire({
-          icon: 'error',
-          title: 'Failed',
-          text: 'Failed to send OTP. Please try again.',
-          confirmButtonText: 'OK'
-        });
-            }
-          })
-          .catch(error => {
-            console.error('Error:', error);
+        resetPasswordModal.show();
+      }
+    
+      // Handle "Forgot Password" form submission
+      forgotPasswordForm.addEventListener('submit', function(event) {
+        event.preventDefault(); 
+        console.log("forgotPasswordForm")
+        const email = document.getElementById('email').value;
+    
+        fetch('/forgotPassword', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log("iam data",data)
+          if (data.success) {
             Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'An error occurred. Please try again later.',
-        confirmButtonText: 'OK'
-      });
+              icon:'success',
+              title: 'OTP Sent!',
+              text: 'Please check your email for the OTP.',
+              confirmButtonText: 'OK'
+            }).then(() => openOtpModal(email));
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Failed',
+              text: 'Failed to send OTP. Please try again.',
+              confirmButtonText: 'OK'
+            });
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'An error occurred. Please try again later.',
+            confirmButtonText: 'OK'
           });
         });
-      </script>
-<script>
-    
-    document.getElementById('otpForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-      
-      const email = document.getElementById('otpEmail').value;
-      const otp = document.getElementById('otp').value;
-  
-      fetch('/verifyOtpForPassword', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, otp })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-            Swal.fire({
-          icon: 'success',
-          title: 'OTP Verified!',
-          text: 'You can now reset your password.',
-          confirmButtonText: 'OK'
-        }).then(() => {
-          
-          openResetPasswordModal(email);
-        });
-        } else {
-            Swal.fire({
-          icon: 'error',
-          title: 'Invalid OTP',
-          text: data.message ||'Please enter the correct OTP and try again.',
-          confirmButtonText: 'OK'
-        });
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'An error occurred while verifying the OTP. Please try again later.',
-        confirmButtonText: 'OK'
       });
-      });
-    });
-  </script>
-<script>
-    
-    document.getElementById('resetPasswordForm').addEventListener('submit', function(event) {
+    otpButton.addEventListener('click',function(event){
       event.preventDefault();
-      
-      const email = document.getElementById('resetEmail').value;
-      const newPassword = document.getElementById('newPassword').value;
-      const confirmPassword = document.getElementById('confirmPassword').value;
-  
-      if (newPassword !== confirmPassword) {
-        Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Passwords do not match. Please try again.',
+      console.log("iam in verification")
+      if(timeLeft>0){
+        const email = document.getElementById('otpEmail').value;
+        const otp = document.getElementById('otp').value;
+    
+        fetch('/verifyOtpForPassword', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, otp })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            Swal.fire({
+              icon:'success',
+              title: 'OTP Verified!',
+              text: 'You can now reset your password.',
+              confirmButtonText: 'OK'
+            }).then(() => openResetPasswordModal(email));
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Invalid OTP',
+              text: data.message || 'Please enter the correct OTP and try again.',
+              confirmButtonText: 'OK'
             });
-        return;
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'An error occurred while verifying the OTP. Please try again later.',
+            confirmButtonText: 'OK'
+          });
+        });
+
+      }else{
+        console.log("resendOtpButton")
+        const email = document.getElementById('otpEmail').value;
+    
+        fetch('/forgotPassword', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log("iam resend data")
+          if (data.success) {
+            Swal.fire({
+              icon:'success',
+              title: 'OTP Resent!',
+              text: 'Please check your email for the new OTP.',
+              confirmButtonText: 'OK'
+            }).then(() => startOtpTimer());
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Failed',
+              text: 'Failed to resend OTP. Please try again.',
+              confirmButtonText: 'OK'
+            });
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'An error occurred. Please try again later.',
+            confirmButtonText: 'OK'
+          });
+        });
+
       }
-  
-      fetch('/resetPassword', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, newPassword ,confirmPassword})
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
+
+    })
+
+    
+    
+      // Handle "Reset Password" form submission
+      resetPasswordForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const email = document.getElementById('resetEmail').value;
+        // console.log("in side reset",email)
+        const newPassword = document.getElementById('newPassword').value;
+        // console.log("newPassword",newPassword)
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        // console.log("confirmPassword",confirmPassword)
+        if (newPassword !== confirmPassword) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Passwords do not match. Please try again.',
+          });
+          return;
+        }else{
+    
+        fetch('/resetPassword', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, newPassword ,confirmPassword})
+        })
+        .then(response => response.json())
+        .then(data => {
+          // console.log("iam data in match",data)
+          if (data.success) {
             Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: data.message, 
-                }).then(() => {
-                 
-                    window.location.href = '/login'; 
-                }); 
-        } else {
+              icon:'success',
+              title: 'Success!',
+              text: data.message,
+            }).then(() => {
+              window.location.href = '/login';
+            });
+          } else {
             Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: data.message || 'Password reset failed. Please try again.',
-                });
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'An error occurred while verifying the OTP. Please try again later.',
-        confirmButtonText: 'OK'
+              icon: 'error',
+              title: 'Error!',
+              text: data.message || 'Password reset failed. Please try again.',
+            });
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'An error occurred during password reset. Please try again later.',
+            confirmButtonText: 'OK'
+          });
+        });}
       });
-      });
+   
+    
+   
+    // Remember Me functionality
+    if (localStorage.getItem('rememberMe') === 'true') {
+      emailInput.value = localStorage.getItem('email');
+      rememberMeCheckbox.checked = true;
+    }
+    
+    document.querySelector('form').addEventListener('submit', function() {
+      if (rememberMeCheckbox.checked) {
+        localStorage.setItem('rememberMe', 'true');
+        localStorage.setItem('email', emailInput.value);
+      } else {
+        localStorage.removeItem('rememberMe');
+        localStorage.removeItem('email');
+      }
     });
+  })  </script>
+  <script>
+      document.querySelector('form').addEventListener('submit', function(event) {
+  event.preventDefault();  // Prevent form submission to handle via JavaScript
+
+  const email = document.querySelector('input[name="email"]').value;
+  const password = document.querySelector('input[name="password"]').value;
+
+  fetch('/loginn', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      if (data.message === "LoginSuccess") {
+        window.location.href = '/';  // Redirect to homepage on successful login
+      }
+    } else {
+      // Display SweetAlert messages based on the specific response message
+      switch (data.message) {
+        case "AccountBlocked":
+          Swal.fire({
+            icon: 'error',
+            title: 'Account Blocked',
+            text: 'Your account has been blocked. Please contact support.',
+            confirmButtonText: 'OK'
+          });
+          break;
+        case "InvalidCredentials":
+          Swal.fire({
+            icon: 'error',
+            title: 'Login Failed',
+            text: 'Invalid email or password. Please try again.',
+            confirmButtonText: 'OK'
+          });
+          break;
+        case "UserNotRegistered":
+          Swal.fire({
+            icon: 'warning',
+            title: 'Not Registered',
+            text: 'User not found. Please sign up to create an account.',
+            confirmButtonText: 'Sign Up'
+          }).then(() => {
+            window.location.href = '/register';  // Redirect to registration page
+          });
+          break;
+        case "ServerError":
+          Swal.fire({
+            icon: 'error',
+            title: 'Server Error',
+            text: 'An error occurred on the server. Please try again later.',
+            confirmButtonText: 'OK'
+          });
+          break;
+      }
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'An error occurred. Please try again later.',
+      confirmButtonText: 'OK'
+    });
+  });
+});
+
   </script>
-          
 </body>
 
 </html>
