@@ -4,8 +4,6 @@
         width: 20px; 
         height: 20px; 
     }
-    
-    
     .product-cart-wrap {
     display: flex;
     flex-direction: column;
@@ -105,8 +103,6 @@
             e.preventDefault();
             const categoryId = this.dataset.cat;
             const search = document.getElementById('searchInput').value;
-            
-            
             window.location.href = `/?cat=${categoryId}&search=${search}`;
         });
     });
@@ -115,8 +111,6 @@
         e.preventDefault();
         const search = document.getElementById('searchInput').value;
         const categoryId = new URLSearchParams(window.location.search).get('cat');
-        
-       
         window.location.href = `/?cat=${categoryId || 'ALL'}&search=${search}`;
     });
 
@@ -199,16 +193,10 @@ document.addEventListener('DOMContentLoaded', function() {
         tabs.forEach(tab => {
             tab.addEventListener('click', function(event) {
                 event.preventDefault();
-
-                
                 tabs.forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
-
-                
                 const tabContents = tabContentContainer.querySelectorAll('.tab-pane');
                 tabContents.forEach(content => content.classList.remove('show', 'active'));
-
-                
                 const targetContentId = this.getAttribute('data-bs-target');
                 const targetContent = tabContentContainer.querySelector(targetContentId);
 
@@ -307,7 +295,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                                 <% } else { %>
                                                     <div class="product-action-1">
                                                         <h4 class="in-stock text-danger ml-5 bold-text"> Out of Stock</h4>
-    
+                                                        
                                                     </div>
                                                 <% } %>
                                             </div>

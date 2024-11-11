@@ -6,10 +6,6 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta property="og:title" content="">
-    <meta property="og:type" content="">
-    <meta property="og:url" content="">
-    <meta property="og:image" content="">
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/assets/imgs/theme/Artisticlogo.ico">
     <!-- Template CSS -->
@@ -22,11 +18,74 @@
 
     <style>
         .logo-img {
-            width: 40px;  /* Adjust the size as needed */
+            width: 40px;
             height: auto;
         }
         .header-action-right, .header-action-icon-2, .logo {
             display: flex !important;
+        }
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .main-menu ul {
+            display: flex;
+            align-items: center;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            gap: 15px;
+        }
+        .main-menu ul li {
+            white-space: nowrap;
+        }
+        .search-style-2 button.btn-outline-success {
+    font-size: 0.8rem !important;
+    padding: 3px 6px !important; 
+    height: 30px !important; 
+    width: auto !important;
+    line-height: 1 !important; 
+}
+.header-right {
+    margin-right: 20px; 
+}
+
+.header-nav {
+    margin-left: 20px;
+}
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            .header-middle { 
+                display: none;
+            }
+            .header-bottom {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px 20px;
+            }
+            .header-nav {
+                display: none;
+            }
+            .mobile-nav {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+            .mobile-menu {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+            .burger-icon {
+                display: inline-block;
+                cursor: pointer;
+            }
+          
         }
     </style>
 </head>
@@ -36,23 +95,31 @@
     <!-- Header for larger screens (desktop) -->
     <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
         <div class="container">
-            <div class="screen-overlay"></div>
             <div class="header-wrap bg-white">
-                <!-- Logo for desktop -->
                 <div class="logo logo-width-1">
                     <a href="/">
                         <img src="/assets/imgs/theme/artisticAuraa.ico" class="logo-img" alt="Artistic Aura">
                     </a>
                 </div>
                 <div class="header-right">
-                    <!-- Search form for desktop -->
                     <div class="search-style-2">
                         <form id="searchForm" class="d-flex mb-4">
                             <input id="searchInput" class="form-control me-2" type="search" placeholder="Search for products" aria-label="Search" name="search">
                             <button class="btn btn-outline-success" type="submit">Search</button>
                         </form>
                     </div>
-                    <!-- Wishlist and Cart icons for desktop -->
+                </div>
+                    <div class="header-nav d-none d-lg-flex">
+                        <div class="main-menu main-menu-padding-1 main-menu-lh-2">
+                            <nav>
+                                <ul>
+                                    <li><a class="active" href="/">Home</a></li>
+                                    <li><a href="/about">About</a></li>
+                                    <li><a href="/profile">Profile</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
                     <div class="header-action-right">
                         <div class="header-action-2">
                             <div class="header-action-icon-2">
@@ -67,7 +134,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- User account options for desktop -->
                     <div class="col-xl-3 col-lg-4">
                         <div class="header-info header-info-right">
                             <ul>
@@ -93,68 +159,20 @@
                 <div class="logo logo-width-1">
                     <a href="/"><img src="/assets/imgs/theme/artisticAuraa.ico" class="logo-img" alt="logo"></a>
                 </div>
-                <!-- Main navigation menu for desktop only -->
-                <div class="header-nav d-none d-lg-flex">
-                    <div class="main-menu main-menu-padding-1 main-menu-lh-2">
-                        <nav>
-                            <ul>
-                                <li><a class="active" href="/">Home </a></li>
-                                <li><a href="/about">About</a></li>
-                                <li><a href="/profile">Profile</a></li>
-                            </ul>
-                        </nav>
+                <!-- Mobile Menu Icon and Navigation Links -->
+                <div class="mobile-nav">
+                    <div class="mobile-menu">
+                        <a href="/" class="nav-link">Home</a>
+                        <a href="/about" class="nav-link">About</a>
+                        <a href="/profile" class="nav-link">Profile</a>
                     </div>
-                </div>
-                <!-- Wishlist and Cart icons for mobile -->
-                <div class="header-action-right">
-                    <div class="header-action-2">
-                        <div class="header-action-icon-2">
-                            <a href="/wishlist">
-                                <img alt="Artistic Aura" src="/assets/imgs/theme/icons/icon-heart.svg">
-                                
-                            </a>
-                        </div>
-                        <div class="header-action-icon-2">
-                            <a class="mini-cart-icon" href="/cart">
-                                <img alt="Artistic Aura" src="/assets/imgs/theme/icons/icon-cart.svg">
-                               
-                            </a>
-                        </div>
-                        <!-- Additional icons for mobile (e.g., dark mode, profile dropdown) -->
-                      
-                        <li class="dropdown nav-item" style="list-style-type: none; padding: 0; margin: 0;">
-                            <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false">
-                                <i class="fi-rs-user" style="
-                                    font-size: 24px; 
-                                    color: #333; 
-                                    background-color: #f0f0f0; 
-                                    border-radius: 50%; 
-                                    padding: 8px; 
-                                    border: 1px solid #fff; 
-                                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
-                                    transition: transform 0.2s;
-                                    display: inline-flex;
-                                    align-items: center;
-                                    justify-content: center;">
-                                </i>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                                <a class="dropdown-item" href="/profile"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
-                        
-                                <a class="dropdown-item" href="/wallet"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
-                              
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item text-danger" href="/logout"><i class="material-icons md-exit_to_app"></i>Logout</a>
-                            </div>
-                        </li>
-                        <!-- Burger menu icon for mobile -->
-                        <!-- <div class="header-action-icon-2">
-                            <div class="burger-icon burger-icon-white">
-                                <span class="burger-icon-top"></span>
-                                <span class="burger-icon-mid"></span>
-                                <span class="burger-icon-bottom"></span>
-                            </div>
-                        </div> -->
+                    <div class="header-action-right">
+                        <% if (user) { %>
+                            <a href="/logout" class="nav-link">Log out</a>
+                        <% } else { %>
+                            <a href="/login" class="nav-link">Log In</a>
+                            <a href="/register" class="nav-link">Sign Up</a>
+                        <% } %>
                     </div>
                 </div>
             </div>
@@ -163,4 +181,4 @@
 </header>
 
 </body>
-</html>
+

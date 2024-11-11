@@ -68,8 +68,6 @@ const forgotPassword = async (req, res) => {
     const otp = otpGenerator.generate(6, { digits: true });
     user.otp = otp;
     await user.save();
-
-   
     const mailOptions = {
       from: "linjumaria@gmail.com",
       to: email,
@@ -131,15 +129,11 @@ const otpLoad = async (req, res) => {
 };
 const loadHome = async (req, res) => {
   try {
-
-    // console.log("load home beginning from google auth",req.session.user)
     const { cat, search, sort } = req.query;
     let { page } = req.query;
     if (!page) {
       page = 1;
     }
-    // console.log("cat,search,",cat,search,sort,page)
-
   
     const productTotalCount = await ProductModel.countDocuments({})
     const ITEMS_PER_PAGE = pageHelper.PRODUCT_PER_PAGE;
@@ -183,8 +177,7 @@ const loadHome = async (req, res) => {
 
       }
     }
-    // console.log(sortCondition)
-
+    
     const products = await ProductModel
     .find(condition)
     .populate("category")
@@ -201,11 +194,7 @@ const loadHome = async (req, res) => {
     const newfilteredProducts = newproducts.filter(
       (product) => product.category
     );
-    // console.log(products);
-
     const categories = await CategoryModel.find({islisted: true});
-    //  console.log("checking user session from google in home page..." , req.session.user)
-
     res.render("user/user-home", {
       newproducts: newfilteredProducts,
       products: products,
@@ -245,7 +234,7 @@ const insertUser = async (req, res) => {
 
     const data = await saveData.save();
 
-    // console.log(data);
+   
     if (data) {
       res.render("user/otpverify", { email: data.email ,message: "",   
         alertType: ""});
@@ -282,7 +271,7 @@ const  verifyOtp =async (req, res) => {
           const wallet=new walletModel({
             userId:user._id
           })
-          // console.log("iam wallet created in user",wallet)
+         
           await wallet.save()
           await user.save();
 
@@ -369,7 +358,7 @@ const loginUser = async (req, res) => {
         const passwordMatch = await bcrypt.compare(password, userdata.password);
         if (passwordMatch) {
           req.session.user = userdata;
-          console.log("Login success", req.session.user);
+          // console.log("Login success", req.session.user);
           return res.status(STATUS_CODES.OK).json({ success: true, message: "LoginSuccess" });
        
         } else {
@@ -393,15 +382,15 @@ const getUserProductDetalis = async (req, res) => {
     const userId = req.session.user || null;
     if (userId) {
       const user = await UserModel.findById(userId);
-      console.log("in side ",user);
+      // console.log("in side ",user);
       
       if (user && user.isBlocked) {
-        // Redirect if the user is blocked
+       
         return res.redirect('/login');
       }
     }
     const Id = req.params.id;
-    // console.log(Id);
+   
     
     const product = await ProductModel.findOne({ _id: Id }).populate(
       "category"
@@ -426,8 +415,13 @@ const getUserProductDetalis = async (req, res) => {
 };
 const logoutUser = (req, res) => {
   try {
-    req.session.user = null;
-    res.redirect("/");
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Error destroying session:", err);
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Internal server error" });
+      }
+      res.redirect("/");
+    });
   } catch (error) {
     console.log(error);
     res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Internal server error" });

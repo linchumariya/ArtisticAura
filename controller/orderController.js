@@ -326,13 +326,19 @@ const applyCoupon = async (req, res) => {
         return res.status(STATUS_CODES.NOT_FOUND).json({ message: "Coupon not found" });
       }
 
+      // const totalAmount = cart.totalPrice;
+      // console.log("ta",totalAmount)
+      // let discountAmount =
+      //   totalAmount > coupon.maximumAmount
+      //     ? coupon.maximumAmount
+      //     : Math.ceil((totalAmount * coupon.percentage) / 100);
+      //     console.log("da",discountAmount)
+      //     console.log("coupon",Math.ceil((totalAmount * coupon.percentage) / 100))
       const totalAmount = cart.totalPrice;
-      let discountAmount =
-        totalAmount > coupon.maximumAmount
-          ? coupon.maximumAmount
-          : Math.ceil((totalAmount * coupon.percentage) / 100);
-
+      const percentageDiscount = Math.ceil((totalAmount * coupon.percentage) / 100);
+      const discountAmount = percentageDiscount > coupon.maximumAmount ? coupon.maximumAmount : percentageDiscount;
       const amountToPay = totalAmount - discountAmount;
+      // const amountToPay = totalAmount - discountAmount;
       user.usedCoupons.push(coupon._id);
       const data = await user.save();
       return res.status(STATUS_CODES.OK).json({

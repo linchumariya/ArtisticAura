@@ -29,6 +29,8 @@ app.use(
 
 
 app.use(express.static(path.join(__dirname, "public")));
+
+
 app.use("/", userRoute);
 app.use("/", adminRoute);
 
@@ -41,22 +43,20 @@ app.use("/", adminRoute);
    
 //   }
 // });
+app.use((req, res, next) => {
+  const error = new Error('Page not found');
+  // console.log("error is there",error)
+  error.status = STATUS_CODES.NOT_FOUND; // Assuming STATUS_CODES.NOT_FOUND is 404
+  next(error);
+});
 app.use((err, req, res, next) => {
-  console.error('Error occurred:', err.stack);
-
+  // console.error('Error occurred:', err.stack);
   const statusCode = err.status || STATUS_CODES.INTERNAL_SERVER_ERROR;
-
-  // Check if the response headers were already sent, pass the error to the default error handler if so
   if (res.headersSent) {
     return next(err);
   }
-
-  // Set the status code
   res.status(statusCode);
-
-  // Determine response type and render appropriate page or send JSON response
   if (req.accepts('html')) {
-    // Render specific pages based on the status code
     if (statusCode === STATUS_CODES.NOT_FOUND) {
       res.render('user/page404', {
         message: err.message || 'Page not found',
@@ -69,10 +69,8 @@ app.use((err, req, res, next) => {
       });
     }
   } else if (req.accepts('json')) {
-    // Respond with JSON for API requests
     res.json({ error: err.message || 'An error occurred', status: statusCode });
   } else {
-    // Fallback for plain text response
     res.type('txt').send('Error occurred');
   }
 });
