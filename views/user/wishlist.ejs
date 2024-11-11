@@ -69,7 +69,7 @@
 </section>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    // Function to add an item to the cart
+  
     function addToCart(productId) {
         $.ajax({
             url: `/addtocart/${productId}`,
@@ -84,7 +84,7 @@
                         text: 'Product added to cart successfully.',
                         confirmButtonText: 'OK'
                     });
-                    // Optionally, update the UI to reflect the addition
+                    
                 } else {
                     Swal.fire({
                         icon: 'error',
@@ -93,6 +93,13 @@
                     });}
             },
             error: function(xhr, status, error) {
+                if (xhr.status === 409) {
+                        Swal.fire({
+                        icon: 'warning',
+                        title: 'Product Already in Cart',
+                        text: 'This product is already in your cart.'
+                        });
+                    } else {
                 
                 console.error('Error:', error);
                 Swal.fire({
@@ -100,11 +107,11 @@
                     title: 'Error',
                     text: "An error occurred while adding the product to the cart.",
                 });
-            }
+            }}
         });
     }
 
-    // Function to remove an item from the wishlist
+  
     function remove(productId) {
         Swal.fire({
             title: 'Are you sure?',
@@ -127,7 +134,7 @@
                                 'Product has been removed from your wishlist.',
                                 'success'
                             ).then(() => {
-                                location.reload(); // Reload the page to reflect changes
+                                location.reload(); 
                             });
                         } else {
                             Swal.fire({

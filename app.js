@@ -4,14 +4,14 @@ const session = require("express-session");
 const path = require("path");
 const userRoute = require("./routes/userroutes");
 const passport = require("passport");
-
+const nocache = require("nocache");
 const dotenv = require("dotenv").config();
 const connectDB=require("./db")
 const app = express();
 connectDB();
 const adminRoute = require("./routes/adminRoute");
 const STATUS_CODES = require("./helper/statusCode");
-
+app.use(nocache())
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

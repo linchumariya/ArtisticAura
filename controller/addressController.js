@@ -13,13 +13,13 @@ const getAddress =async (req, res) => {
     const userId  = req.session.user._id
     const addressDocument = await AddressModel.findOne({userId:userId});
     if (!addressDocument || !addressDocument.addresses || addressDocument.addresses.length === 0) {
-    res.render("user/addressview",{user: req.session.user,
+      return  res.render("user/addressview",{user: req.session.user,
       addresses:[],
     });
   }
   res.render('user/addressview', {
     user: req.session.user,
-    addresses: addressDocument.addresses
+    addresses: addressDocument.addresses,
   })
   } catch (error) {
     console.log(error);

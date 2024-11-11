@@ -173,25 +173,21 @@
                  'Content-Type': 'application/json'
              },
          })
-         .then(response => {
-             if (!response.ok) {
-                 throw new Error('Network response was not ok');
-             }
-             return response.json();
-         })
-         .then(data => {
-            console.log(data);
-            
-            if (data.success) {
+         .then(response => response.json().then(data => ({ status: response.status, body: data })))
+         .then(({ status, body }) => {
+            if (status === 201) {
                 Swal.fire({
                     title: 'Added to Cart',
                     text: 'The product has been added to your cart.',
                     icon: 'success',
                     confirmButtonColor: '#28a745'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = '/cart';
-                    }
+                });
+            } else if (status === 409) {
+                Swal.fire({
+                    title: 'Already in Cart',
+                    text: 'The product is already in your cart.',
+                    icon: 'warning',
+                    confirmButtonColor: '#ffc107'
                 });
 
              } else {

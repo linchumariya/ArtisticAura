@@ -4,12 +4,12 @@ const ProductModel = require("../model/productModel");
 const CategoryModel = require("../model/categoryModel");
 const pageHelper = require("../helper/paginationHelper");
 const passport = require('passport');
-const otpGenerator = require('otp-generator');
+// const otpGenerator = require('otp-generator');
 const STATUS_CODES=require("../helper/statusCode")
 const nodemailer = require("nodemailer");
-const isUser = require('../middleware/user');
+const user = require('../middleware/user');
 const walletModel = require("../model/walletModel");
-const user = require("../middleware/user");
+
 
 const securePassword = async (password) => {
   try {
@@ -49,6 +49,10 @@ const registerLoad = async (req, res) => {
 };
 const loginLoad = async (req, res) => {
   try {
+    if (req.session.user) {
+      // console.log("redirected")
+      return res.redirect('/'); 
+    }
     // console.log("enter in to the loginload");
     res.render("user/login");
   } catch (error) {
@@ -65,7 +69,7 @@ const forgotPassword = async (req, res) => {
       return res.status(STATUS_CODES.NOT_FOUND).json({ message: "User not found" });
     }
     
-    const otp = otpGenerator.generate(6, { digits: true });
+    const otp = Math.floor(100000 + Math.random() * 900000);
     user.otp = otp;
     await user.save();
     const mailOptions = {
@@ -305,7 +309,7 @@ const resendOtp = async (req, res) => {
   try {
       const user = await UserModel.findOne({ email: email });
       if (user) {
-          const newOtp = otpGenerator.generate(6, { digits: true });
+          const newOtp =  Math.floor(100000 + Math.random() * 900000);
           user.otp = newOtp;
           await user.save();
           const mailOptions = {
