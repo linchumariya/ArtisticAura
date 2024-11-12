@@ -3,7 +3,7 @@ const CategoryModel = require("../model/categoryModel");
 const PaginationHelper = require("../helper/paginationHelper");
 const STATUS_CODES=require("../helper/statusCode")
 const multer = require("multer");
-const sharp = require("sharp");
+// const sharp = require("sharp");
 
 const storage = multer.diskStorage({
   destination: "public/product_images",

@@ -50,8 +50,8 @@ const registerLoad = async (req, res) => {
 const loginLoad = async (req, res) => {
   try {
     if (req.session.user) {
-      // console.log("redirected")
-      return res.redirect('/'); 
+     req.session.user=null
+      return res.redirect('/login'); 
     }
     // console.log("enter in to the loginload");
     res.render("user/login");
@@ -512,8 +512,8 @@ const postChangePassword = async (req, res) => {
 
     userdata.password = hashedPassword;
     await userdata.save();
-
-    res.redirect("/login");
+    console.log("password changed")
+    return res.status(200).json({ success: true, message: "Password changed successfully" });
   } catch (error) {
     console.error(error.message);
     res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: "Internal server error" });

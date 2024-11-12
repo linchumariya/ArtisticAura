@@ -29,7 +29,7 @@ const getAddress =async (req, res) => {
   };
 const getAddAddress=async(req,res)=>{
   try {
-      console.log("user of address is",req.session.user)
+      // console.log("user of address is",req.session.user)
     res.render("user/addaddress",{
       user:req.session.user
 

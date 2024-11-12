@@ -60,8 +60,6 @@
                 class="btn btn-danger px-4 verify"
               />
             </div>
-
-            <!-- Resend button, initially hidden -->
             <div class="mt-4" id="resend-container" style="display: none">
               <a href="/resendOtp?email=<%= email %>">
                 <input
@@ -71,8 +69,6 @@
                 />
               </a>
             </div>
-
-            <!-- Countdown Timer -->
             <div id="countdown" class="mt-3">1:00</div>
           </form>
         </div>
@@ -86,7 +82,7 @@
       let savedTime = sessionStorage.getItem("remainingTime");
       let seconds = savedTime ? parseInt(savedTime) : 60; // 1 minutes
 
-      // Update the countdown timer
+      
       function updateTimer() {
         const timerElement = document.getElementById("countdown");
         const minutes = Math.floor(seconds / 60);
@@ -95,15 +91,13 @@
         sessionStorage.setItem("remainingTime", seconds);
       
       }
-
-      // Start the countdown timer
       function startTimer() {
         console.log("iam counter")
         updateTimer();
         const timerInterval = setInterval(() => {
           seconds--;
           if (seconds >= 0) {
-            updateTimer(); // Update the timer every second
+            updateTimer(); 
           } else {
             clearInterval(timerInterval);
             Swal.fire({
@@ -112,19 +106,15 @@
               text: "Please request a new OTP code.",
               confirmButtonColor: "#dc3545",
             });
-            document.getElementById("resend-container").style.display = "block"; // Show resend button
-            sessionStorage.setItem("otpResendVisible", "true"); // Store resend visibility
+            document.getElementById("resend-container").style.display = "block"; 
+            sessionStorage.setItem("otpResendVisible", "true"); 
             sessionStorage.removeItem("remainingTime"); 
           } 
         }, 1000);
       }
 
       window.onload = () => {
-        // Start the countdown on page load
-        
         startTimer();
-
-        // Show alert if message exists
         if (message && alertType) {
           Swal.fire({
             icon: alertType,
@@ -136,8 +126,6 @@
             }
           });
         }
-
-        // Check if resend button should be visible based on session storage
         const resendVisible = sessionStorage.getItem("otpResendVisible");
         if (resendVisible === "true") {
           document.getElementById("resend-container").style.display = "block";

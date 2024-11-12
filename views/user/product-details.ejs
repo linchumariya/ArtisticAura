@@ -181,7 +181,11 @@
                     text: 'The product has been added to your cart.',
                     icon: 'success',
                     confirmButtonColor: '#28a745'
-                });
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/cart';
+                }
+            });
             } else if (status === 409) {
                 Swal.fire({
                     title: 'Already in Cart',

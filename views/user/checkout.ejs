@@ -216,7 +216,12 @@
         if (orderTotal>1000){
             codOption.disabled=true;
             codOption.checked=false;
-            swal.fire("COD disabled",'cash on delivery is diabled for purchase value above 1000')
+            swal.fire({
+                title: 'COD disabled',
+                    text: 'cash on delivery is diabled for purchase value above 1000',
+                    icon: 'warning',
+                    confirmButtonColor: '#ffc107'
+            })
 
         }else
                 {codOption.disabled=false;}        

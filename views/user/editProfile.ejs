@@ -1,5 +1,14 @@
 <%- include ('../partials/userheader') %>
+<style>
+  
+.btn-primary:hover {
+    color: #fff;
+    background-color: #046963;
+    border-color: #046963;
+}
+</style>
 <main>
+    <!-- Breadcrumb and Account Details -->
     <div class="page-header breadcrumb-wrap">
         <div class="container">
             <div class="breadcrumb">
@@ -10,118 +19,210 @@
             </div>
         </div>
     </div>
-<section class="pt-50 pb-50">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-10 m-auto">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="dashboard-menu">
-                            <ul class="nav flex-column" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/profile"><i class="fi-rs-dashboard mr-10"></i>Dashboard</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/myorder" ><i class="fi-rs-shopping-bag mr-10"></i>Orders</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link"  href="/addressview" ><i class="fi-rs-marker mr-10"></i>My Address</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link active" href="/editProfile" ><i class="fi-rs-user mr-10"></i>Account details</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/wallet" ><i class="fi-rs-user mr-10"></i>Wallet details</a>
-                                </li>
-                            </ul>
+
+    <section class="pt-50 pb-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 m-auto">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="dashboard-menu">
+                                <ul class="nav flex-column" role="tablist">
+                                    <li class="nav-item"><a class="nav-link" href="/profile"><i class="fi-rs-dashboard mr-10"></i>Dashboard</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="/myorder"><i class="fi-rs-shopping-bag mr-10"></i>Orders</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="/addressview"><i class="fi-rs-marker mr-10"></i>My Address</a></li>
+                                    <li class="nav-item"><a class="nav-link active" href="/editProfile"><i class="fi-rs-user mr-10"></i>Account details</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="/wallet"><i class="fi-rs-user mr-10"></i>Wallet details</a></li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="tab-content dashboard-content">
-                            <div class="tab-pane fade active show" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
-                                <div class="card">
+
+                        <div class="col-md-8">
+                            <div class="tab-content dashboard-content">
+                                <div class="tab-pane fade active show" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+                                    <div class="card">
                                         <div class="card-header">
                                             <h5>Profile Details And Edit Profile</h5>
                                         </div>
-                                    <div class="card-body">
-                                    <form action="/editedprofile" method="post" onsubmit="return validateForm()" name="registrationForm">
-                                        <div class="mb-3">
-                                            <label class="form-label">Enter your name</label>
-                                            <input class="form-control" placeholder="Your name" type="text" value="<%= users.name %>" name="name" >
-                                            <span id="name-error" style="font-size: 14px; margin-top: -20px; color: red;"></span>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label class="form-label">Phone</label>
-                                            <div class="row gx-2">
-                                                <input class="form-control" placeholder="Enter your number" value="<%= users.phone %>" type="text" name="phone" >
-                                                <span id="phone-error" style="font-size: 14px; margin-top: -20px; color: red;"></span>
+                                        <div class="card-body">
+                                            <form action="/editedprofile" method="post" onsubmit="return validateForm()" name="registrationForm">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Enter your name</label>
+                                                    <input id="contact-name" class="form-control" placeholder="Your name" type="text" value="<%= users.name %>" name="name" onkeyup="validateName()">
+                                                    <span id="name-error" style="font-size: 14px; margin-top: -20px; color: red;"></span>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label">Phone</label>
+                                                    <input class="form-control" placeholder="Enter your number" value="<%= users.phone %>" type="text" name="phone" id="contact-phone" onkeyup="validatePhone()">
+                                                    <span id="phone-error" style="font-size: 14px; margin-top: -20px; color: red;"></span>
+                                                </div>
+
+                                                <div class="mb-4">
+                                                    <button type="submit" class="btn btn-primary w-100">Save</button>
+                                                </div>
+                                            </form>
+
+                                            <h4 class="card-title mb-4">Reset Password</h4>
+                                            <form id="resetPasswordForm">
+                                            <div class="mb-3">
+                                                <input class="form-control" placeholder="Current Password" type="password" name="currentpassword" id="currentPasswordInput">
                                             </div>
+                                                <div class="mb-3">
+                                                    <input id="newPasswordInput" class="form-control" placeholder="New Password" type="password" name="newpassword" onkeyup="">
+                                                    <span id="password-error" style="font-size: 14px; color: red;"></span>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <input id="confirmPasswordInput" class="form-control" placeholder="Confirm Password" type="password" name="confirmpassword" onkeyup="">
+                                                    <span id="confirm-password-error" style="font-size: 14px; color: red;"></span>
+                                                </div>
+                                                <div class="mb-4">
+                                                    <button type="submit" class="btn btn-primary w-100">Reset Password</button>
+                                                </div>
+                                            </form>
                                         </div>
-                                        <div class="mb-4">
-                                            <button type="submit" class="btn btn-primary w-100"> Save </button>
-                                        </div> 
-                                    </form>
-                                    <h4 class="card-title mb-4">Reset Password</h4>
-                           
-                                <form id="resetPasswordForm" action="/changepassword" method="post" onsubmit="return validatePassword()">
-                                    <div class="mb-3">
-                                        <input class="form-control" placeholder="Current Password" type="password" name="currentpassword">
                                     </div>
-                                    <div class="mb-3">
-                                        <input id="newPasswordInput" class="form-control" placeholder="New Password" type="password" name="newpassword">
-                                    </div>
-                                    <div class="mb-3">
-                                        <input id="confirmPasswordInput" class="form-control" placeholder="Confirm Password" type="password" name="confirmpassword">
-                                        <span id="passwordMessage"></span>
-                                    </div>
-                                    <div class="mb-4">
-                                        <button type="submit" class="btn btn-primary w-100">Reset Password</button>
-                                    </div>
-                                </form>
                                 </div>
-                            </div>
+                            </div>   
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 </main>
-<script>
-    function validatePassword() {
-        const newPassword = document.getElementById('newPasswordInput').value;
-        const confirmPassword = document.getElementById('confirmPasswordInput').value;
 
-        if (newPassword !== confirmPassword) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'New Password and Confirm Password do not match!',
-            });
+<script>
+    function validateName() {
+        const name = document.getElementById("contact-name").value;
+        const nameError = document.getElementById("name-error");
+
+        if (name.length === 0) {
+            nameError.innerHTML = "Name is required";
+            nameError.style.color = "red";
+            return false;
+        }
+        if (name[0] === ' ') {
+            nameError.innerHTML = "Name should not start with space";
+            nameError.style.color = "red";
+            return false;
+        }
+        if (name.match(/^[0-9]+$/)) {
+            nameError.innerHTML = "Alphabets only";
+            nameError.style.color = "red";
+            return false;
+        }
+        if (!name.match(/^[A-Za-z]*\s{1}[A-Za-z]*$/)) {
+            nameError.innerHTML = "Write full name";
+            nameError.style.color = "red";
             return false;
         }
 
-        // Additional validation logic (e.g., password strength) can go here
+        nameError.innerHTML = "Valid";
+        nameError.style.color = "green";
+        return true;
+    }
+
+    function validatePhone() {
+        const phone = document.getElementById("contact-phone").value;
+        const phoneError = document.getElementById("phone-error");
+
+        if (phone.length === 0) {
+            phoneError.innerHTML = "Phone number is required";
+            phoneError.style.color = "red";
+            return false;
+        }
+        if (!phone.match(/^[0-9]{10}$/) || phone === "0000000000" || phone === "9999999999") {
+            phoneError.innerHTML = "Invalid phone number";
+            phoneError.style.color = "red";
+            return false;
+        }
+
+        phoneError.innerHTML = "Valid";
+        phoneError.style.color = "green";
+        return true;
+    }
+
+    document.getElementById('newPasswordInput').addEventListener('keyup', validatePassword);
+    document.getElementById('confirmPasswordInput').addEventListener('keyup', validatePassword);
+
+    function validatePassword() {
+        const newPassword = document.getElementById('newPasswordInput').value;
+        const confirmPassword = document.getElementById('confirmPasswordInput').value;
+        const passwordError = document.getElementById("password-error");
+        const confirmPasswordError = document.getElementById("confirm-password-error");
+       
+        if (newPassword.includes(' ')) {
+            passwordError.innerHTML = "Password should not contain spaces";
+            passwordError.style.color = "red";
+            return false;
+        } else if (newPassword.length < 5) {
+            passwordError.innerHTML = "Password must be at least 5 characters";
+            passwordError.style.color = "red";
+            return false;
+        } else {
+            passwordError.innerHTML = "Valid";
+            passwordError.style.color = "green";
+        }
+
+       
+        if (newPassword && confirmPassword) {
+            if (newPassword !== confirmPassword) {
+                confirmPasswordError.innerHTML = "New Password and Confirm Password do not match!";
+                confirmPasswordError.style.color = "red";
+                return false;
+            } else {
+                confirmPasswordError.innerHTML = "Passwords match";
+                confirmPasswordError.style.color = "green";
+            }
+        } else {
+            confirmPasswordError.innerHTML = ""; 
+        }
 
         return true;
     }
 
-    // Optional: Show a success alert after form submission
-    document.getElementById('resetPasswordForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent form submission to demonstrate the alert
+    document.getElementById('resetPasswordForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
 
-        Swal.fire({
-            icon: 'success',
-            title: 'Password Reset',
-            text: 'Your password has been successfully reset!',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                this.submit(); // Submit the form if the user confirms
-            }
+        const currentPassword = document.getElementById('currentPasswordInput').value;
+        const newPassword = document.getElementById('newPasswordInput').value;
+        const confirmPassword = document.getElementById('confirmPasswordInput').value;
+
+        if (!validatePassword()) {
+            return;
+        }
+
+        const response = await fetch('/changepassword', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ currentpassword: currentPassword, newpassword: newPassword, confirmpassword: confirmPassword })
         });
+
+        const result = await response.json();
+
+        if (!result.success) {
+           
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: result.message,
+            });
+        } else {
+           
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Your password has been successfully reset!',
+            }).then(() => {
+                window.location.href = '/login'; 
+            });
+        }
     });
+    document.getElementById('contact-name').addEventListener('keyup', validateName);
+    document.getElementById('contact-phone').addEventListener('keyup', validatePhone);
 </script>
 
 <%- include ('../partials/userfooter') %>
