@@ -60,16 +60,7 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-// const authController = {
-//   googleAuth: passport.authenticate("google", {
-//     scope: ["profile", "email"],
-//   }),
 
-//   googleAuthCallback: passport.authenticate("google", {
-//     failureRedirect: "/register",
-//     successRedirect: "/",
-//   }),
-// };
 
 const googleAuth = passport.authenticate('google', { scope: ["email", "profile"] });
 const googleAuthCallback = (req, res, next) => {
