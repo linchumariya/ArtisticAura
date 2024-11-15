@@ -93,14 +93,16 @@ const postCheckout = async (req, res) => {
     if (couponCode) {
       const coupon = await couponModel.findOne({ coupon: couponCode });
       const percentageDiscount = Math.ceil((amountPayable * coupon.percentage) / 100);
-      const discountAmount = percentageDiscount > coupon.maximumAmount ? coupon.maximumAmount : percentageDiscount;
-      
+      // console.log("percentag",percentageDiscount)
+      discountAmount = percentageDiscount > coupon.maximumAmount ? coupon.maximumAmount : percentageDiscount;
+      // console.log("iam discount",discountAmount)
       // if (amountPayable > coupon.maximumAmount) {
       //   discountAmount = coupon.maximumAmount;
       // } else {
       //   discountAmount = Math.ceil((amountPayable * coupon.percentage) / 100);
       // }
       amountPayable -= discountAmount;
+      // console.log("amount payable",amountPayable)
     }
     const wallet = await walletModel.findOne({ userId });
     let walletBalance = wallet.balance||0;
